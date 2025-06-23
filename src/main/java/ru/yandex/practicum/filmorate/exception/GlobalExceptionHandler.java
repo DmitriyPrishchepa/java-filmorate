@@ -45,10 +45,16 @@ public class GlobalExceptionHandler {
         return new ValidationErrorResponse(violations);
     }
 
-    @ExceptionHandler(ElementNotFoundException.class)
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ElementNotFoundException> handleResourceReturnNotFound(ElementNotFoundException e) {
-        return new ResponseEntity<>(new ElementNotFoundException("Not found"), HttpStatus.NOT_FOUND);
+    public ErrorResponse handleResourceReturnNotFound(ElementNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleCommonException(Exception e) {
+        return new ErrorResponse(e.getMessage());
     }
 }
 

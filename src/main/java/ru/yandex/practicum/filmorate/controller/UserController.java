@@ -2,15 +2,14 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -18,54 +17,56 @@ import java.util.Map;
 @Validated
 public class UserController {
 
-    public final Map<Long, User> users = new HashMap<>();
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    public Collection<User> getAllUsers() {
-        log.info("Getting users...");
-        return users.values();
+    public Collection<User> findAllFilms() {
+        return userService.getAllUsers();
     }
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-
-        log.info("Start addition of users...");
-
-        if (user.getLogin().contains(" ")) {
-            log.warn("Warning: Incorrect user login {}", user.getLogin());
-            throw new ValidateLoginIncorrectException("User email can not contains white space symbols");
-        }
-
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-
-        user.setId(getNexId());
-        users.put(user.getId(), user);
-        return user;
+        return userService.addUser(user);
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User newUser) {
-        log.trace("Вызван метод updateUser");
-        User user = users.get(newUser.getId());
-
-        if (user == null) {
-            log.error("Error: user not found");
-            throw new ElementNotFoundException("User not found");
-        }
-
-        users.put(newUser.getId(), newUser);
-        return newUser;
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
     }
 
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable("id") Long id) {
+        return userService.getUserById(id);
+    }
 
-    private Long getNexId() {
-        long currentMaxId = users.values().stream()
-                .mapToLong(User::getId)
-                .max()
-                .orElse(0);
-        log.debug("currentUserMaxId {}", currentMaxId);
-        return ++currentMaxId;
+    @PutMapping("/{userId}/friends/{friendId}")
+    public User addUserToFriends(
+            @PathVariable Long userId,
+            @PathVariable Long friendId
+    ) {
+        return userService.addUserToFriends(userId, friendId);
+    }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void removeUserFromFriends(
+            @PathVariable Long userId,
+            @PathVariable Long friendId
+    ) {
+        userService.removeUserFromFriends(userId, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getAllFriends(@PathVariable Long id) {
+        return userService.getAllFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.getCommonFriends(id, otherId);
     }
 }
