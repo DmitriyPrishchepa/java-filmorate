@@ -69,9 +69,7 @@ public class InMemoryUserStorage implements UserStorage {
 
         user.getFriends().add(friendId);
 
-        Collection<Long> friendFriends = friend.getFriends();
-
-        if (friendFriends == null) {
+        if (friend.getFriends() == null) {
             throw new ElementNotFoundException("User have no friends");
         }
 
