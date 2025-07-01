@@ -54,7 +54,7 @@ public class FilmorateUsersTests {
     @Test
     public void shouldReturnListOfUsers() {
         userController.addUser(testUser);
-        assertTrue(userController.findAllFilms().contains(testUser));
+        assertTrue(userController.findAllUsers().contains(testUser));
     }
 
     @Test
