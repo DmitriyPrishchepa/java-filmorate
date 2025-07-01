@@ -14,14 +14,14 @@ import java.util.Set;
 @Builder
 public class Film {
     @Min(1L)
-    Long id;
+    private Long id;
     @NotBlank
-    String name;
+    private String name;
     @Size(max = 200)
-    String description;
-    LocalDate releaseDate;
+    private String description;
+    private LocalDate releaseDate;
     @Positive
-    int duration;
-    Set<Long> usersIdsLiked;
-    Long likes;
+    private int duration;
+    private Set<Long> usersIdsLiked;
+    private Long likes;
 }

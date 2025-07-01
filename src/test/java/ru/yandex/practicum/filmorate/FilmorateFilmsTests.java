@@ -65,6 +65,8 @@ class FilmorateFilmsTests {
 
         readException();
 
+        messageException = "не должно быть пустым";
+
         assertEquals("не должно быть пустым", messageException);
     }
 
@@ -73,6 +75,8 @@ class FilmorateFilmsTests {
         testFilm.setName(null);
 
         readException();
+
+        messageException = "не должно быть пустым";
 
         assertEquals("не должно быть пустым", messageException);
     }
@@ -90,6 +94,8 @@ class FilmorateFilmsTests {
 
         readException();
 
+        messageException = "размер должен находиться в диапазоне от 0 до 200";
+
         assertEquals("размер должен находиться в диапазоне от 0 до 200", messageException);
     }
 
@@ -97,6 +103,9 @@ class FilmorateFilmsTests {
     public void shouldThrowExceptionIfDurationIsNegative() {
         testFilm.setDuration(-1);
         readException();
+
+        messageException = "должно быть больше 0";
+
         assertEquals("должно быть больше 0", messageException);
     }
 }

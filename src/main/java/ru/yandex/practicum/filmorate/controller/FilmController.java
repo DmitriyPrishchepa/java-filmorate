@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,17 +43,17 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable("id") Long id) {
+    public Film getFilmById(@PathVariable("id") @Positive Long id) {
         return filmService.getFilmById(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public Film likeFilm(@PathVariable Long id, @PathVariable Long userId) {
+    public Film likeFilm(@PathVariable @Positive Long id, @Positive @PathVariable Long userId) {
         return filmService.likeFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film unlikeFilm(@PathVariable Long id, @PathVariable Long userId) {
+    public Film unlikeFilm(@PathVariable @Positive Long id, @Positive @PathVariable Long userId) {
         return filmService.unLikeFilm(id, userId);
     }
 

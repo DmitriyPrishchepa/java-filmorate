@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,33 +41,33 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") Long id) {
+    public User getUserById(@PathVariable("id") @Positive Long id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
     public User addUserToFriends(
-            @PathVariable Long userId,
-            @PathVariable Long friendId
+            @PathVariable @Positive Long userId,
+            @PathVariable @Positive Long friendId
     ) {
         return userService.addUserToFriends(userId, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
     public void removeUserFromFriends(
-            @PathVariable Long userId,
-            @PathVariable Long friendId
+            @PathVariable @Positive Long userId,
+            @PathVariable @Positive Long friendId
     ) {
         userService.removeUserFromFriends(userId, friendId);
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getAllFriends(@PathVariable Long id) {
+    public List<User> getAllFriends(@PathVariable @Positive Long id) {
         return userService.getAllFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+    public List<User> getCommonFriends(@PathVariable @Positive Long id, @Positive @PathVariable Long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 }

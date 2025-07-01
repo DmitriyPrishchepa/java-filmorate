@@ -63,6 +63,8 @@ public class FilmorateUsersTests {
 
         readException();
 
+        messageException = "должно иметь формат адреса электронной почты";
+
         assertEquals("должно иметь формат адреса электронной почты", messageException);
     }
 
@@ -70,6 +72,9 @@ public class FilmorateUsersTests {
     void shouldThrowExceptionIfLoginIsBlank() {
         testUser.setLogin("");
         readException();
+
+        messageException = "не должно быть пустым";
+
         assertEquals("не должно быть пустым", messageException);
     }
 
@@ -77,6 +82,9 @@ public class FilmorateUsersTests {
     void shouldThrowExceptionIfBirthdayInFuture() {
         testUser.setBirthday(LocalDate.of(2026, 10, 5));
         readException();
+
+        messageException = "должно содержать прошедшую дату или сегодняшнее число";
+
         assertEquals("должно содержать прошедшую дату или сегодняшнее число", messageException);
     }
 }

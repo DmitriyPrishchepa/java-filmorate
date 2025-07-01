@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,17 +15,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleResourceReturnNull(NullPointerException e) {
+        log.error("Element doesn't exist");
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ValidateLoginIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
+        log.warn("Incorrect login");
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -34,6 +38,7 @@ public class GlobalExceptionHandler {
     public ValidationErrorResponse onConstraintValidationException(
             ConstraintViolationException e
     ) {
+        log.warn("Duplicate entries or Foreign Key Violations or Not Null Constraints");
         final List<Violation> violations = e.getConstraintViolations().stream()
                 .map(
                         violation -> new Violation(
@@ -48,12 +53,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceReturnNotFound(ElementNotFoundException e) {
+        log.error("Element not found");
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleCommonException(Exception e) {
+        log.error("Server error");
         return new ErrorResponse(e.getMessage());
     }
 }

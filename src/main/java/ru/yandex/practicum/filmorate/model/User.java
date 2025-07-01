@@ -14,13 +14,13 @@ import java.util.Set;
 @Builder
 public class User {
     @Min(1L)
-    Long id;
+    private Long id;
     @Email
-    String email;
+    private String email;
     @NotBlank
-    String login;
-    String name;
+    private String login;
+    private String name;
     @PastOrPresent
-    LocalDate birthday;
-    Set<Long> friends;
+    private LocalDate birthday;
+    private Set<Long> friends;
 }

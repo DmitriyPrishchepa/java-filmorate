@@ -67,8 +67,8 @@ public class InMemoryUserStorage implements UserStorage {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
-        Collection<Long> friendsIds = user.getFriends();
-        friendsIds.add(friendId);
+        user.getFriends().add(friendId);
+        friend.getFriends().add(userId);
 
         return friend;
     }
@@ -78,8 +78,8 @@ public class InMemoryUserStorage implements UserStorage {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
-        Collection<Long> friendsIds = user.getFriends();
-        friendsIds.remove(friend.getId());
+        user.getFriends().remove(friend.getId());
+        friend.getFriends().remove(user.getId());
     }
 
     @Override
