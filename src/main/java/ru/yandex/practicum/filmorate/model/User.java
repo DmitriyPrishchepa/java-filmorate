@@ -19,5 +19,6 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
+    @NotNull
     private Set<Long> friends;
 }
