@@ -34,7 +34,7 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-    public User addUserToFriends(Long userId, Long friendId) {
+    public Collection<User> addUserToFriends(Long userId, Long friendId) {
         return userStorage.addUserToFriends(userId, friendId);
     }
 

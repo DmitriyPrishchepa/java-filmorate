@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public User addUserToFriends(
+    public Collection<User> addUserToFriends(
             @PathVariable @Positive Long userId,
             @PathVariable @Positive Long friendId
     ) {

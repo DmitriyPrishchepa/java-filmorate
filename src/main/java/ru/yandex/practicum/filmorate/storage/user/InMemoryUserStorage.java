@@ -62,7 +62,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User addUserToFriends(Long userId, Long friendId) {
+    public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
         User user = getUserById(userId);
         User friend = getUserById(friendId);
@@ -70,7 +70,14 @@ public class InMemoryUserStorage implements UserStorage {
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
 
-        return friend;
+        Map<Long, User> usersFriends = users.entrySet().stream()
+                .filter(entry -> user.getFriends().contains(entry.getKey()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
+
+        return usersFriends.values();
     }
 
     @Override
