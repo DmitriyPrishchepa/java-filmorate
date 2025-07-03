@@ -45,12 +45,12 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PutMapping("/{userId}/friends/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     public Collection<User> addUserToFriends(
-            @PathVariable @Positive Long userId,
+            @PathVariable @Positive Long id,
             @PathVariable @Positive Long friendId
     ) {
-        return userService.addUserToFriends(userId, friendId);
+        return userService.addUserToFriends(id, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
