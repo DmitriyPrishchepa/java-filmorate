@@ -58,6 +58,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(Long id) {
+
         log.trace("Получаем фильм по id...");
         Film film = movies.get(id);
 

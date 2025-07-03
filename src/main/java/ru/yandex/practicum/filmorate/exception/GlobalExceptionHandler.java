@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
+import ru.yandex.practicum.filmorate.exception.exeptions.ReleaseDateValidationException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 
 import java.util.List;
@@ -20,16 +21,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleResourceReturnNull(NullPointerException e) {
+    public ErrorResponse handleResourceReturnNull(NullPointerException e) {
         log.error("Element doesn't exist");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler(ValidateLoginIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
+    public ErrorResponse handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
         log.warn("Incorrect login");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ErrorResponse(e.getMessage());
     }
 
     @ResponseBody
@@ -48,6 +49,13 @@ public class GlobalExceptionHandler {
                 )
                 .collect(Collectors.toList());
         return new ValidationErrorResponse(violations);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleReleaseDateValidationException(ReleaseDateValidationException e) {
+        log.error("Incorrect release date of film");
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
