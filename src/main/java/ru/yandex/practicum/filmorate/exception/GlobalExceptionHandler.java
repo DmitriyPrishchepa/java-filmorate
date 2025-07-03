@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleValidationException(ValidationException e) {
+        log.error("Validation exception");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleReleaseDateValidationException(ReleaseDateValidationException e) {
         log.error("Incorrect release date of film");
@@ -64,11 +72,11 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-//    @ExceptionHandler
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ErrorResponse handleCommonException(Exception e) {
-//        log.error("Server error");
-//        return new ErrorResponse(e.getMessage());
-//    }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleCommonException(Throwable e) {
+        log.error("Server error");
+        return new ErrorResponse(e.getMessage());
+    }
 }
 
