@@ -34,6 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
+
         if (film.getReleaseDate().isBefore(releaseDateBefore)) {
             log.debug("ReleaseDate {}", film.getReleaseDate());
             throw new ReleaseDateValidationException("Release date can not be earlier December 12, 1895");
@@ -42,16 +43,17 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Start addition of film...");
         film.setId(getNexId());
         film.setUsersIdsLiked(new HashSet<>());
+        film.setLikes(0L);
         movies.put(film.getId(), film);
         return film;
     }
 
     @Override
     public Film updateFilm(Film newFilm) {
-        log.trace("Вызван метод updateUser");
+        log.trace("Вызван метод updateFilm");
         Film film = getFilmById(newFilm.getId());
         movies.put(film.getId(), newFilm);
-        return newFilm;
+        return movies.get(film.getId());
     }
 
     @Override
@@ -73,7 +75,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         if (film == null) {
             throw new ElementNotFoundException("Film not found");
-
         }
 
         Long filmLikes = film.getLikes();
