@@ -72,11 +72,11 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleCommonException(Throwable e) {
-        log.error("Server error");
-        return new ErrorResponse(e.getMessage());
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ErrorResponse handleCommonException(Throwable e) {
+//        log.error("Server error");
+//        return new ErrorResponse(e.getMessage());
+//    }
 }
 
