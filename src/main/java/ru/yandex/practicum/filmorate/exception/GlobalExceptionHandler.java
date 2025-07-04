@@ -52,13 +52,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleValidationException(ValidationException e) {
-        log.error("Validation exception");
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleReleaseDateValidationException(ReleaseDateValidationException e) {
         log.error("Incorrect release date of film");
