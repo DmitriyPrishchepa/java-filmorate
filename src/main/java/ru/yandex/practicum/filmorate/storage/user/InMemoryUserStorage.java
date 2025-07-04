@@ -65,8 +65,6 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
-        checkAreIdsEmpty(userId, friendId);
-
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
@@ -133,12 +131,5 @@ public class InMemoryUserStorage implements UserStorage {
                 .orElse(0);
         log.debug("currentUserMaxId {}", currentMaxId);
         return ++currentMaxId;
-    }
-
-    @Override
-    public void checkAreIdsEmpty(Long userId, Long friendId) {
-        if (userId == null || friendId == null) {
-            throw new ElementNotFoundException("Id not found");
-        }
     }
 }

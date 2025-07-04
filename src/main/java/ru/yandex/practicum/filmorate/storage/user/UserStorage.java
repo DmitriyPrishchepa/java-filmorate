@@ -25,6 +25,4 @@ public interface UserStorage {
     List<User> getAllFriends(Long id);
 
     List<User> getCommonFriends(Long userId, Long otherUserId);
-
-    void checkAreIdsEmpty(Long userId, Long friendId);
 }
