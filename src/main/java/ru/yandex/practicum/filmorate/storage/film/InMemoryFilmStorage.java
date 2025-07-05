@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.storage.film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ReleaseDateException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
+import ru.yandex.practicum.filmorate.exception.exeptions.ReleaseDateValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.FilmsLikesComparator;
 
@@ -37,8 +37,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         if (film.getReleaseDate().isBefore(releaseDateBefore)) {
             log.debug("ReleaseDate {}", film.getReleaseDate());
-            throw new ReleaseDateException("Release date can not be earlier December 12, 1895", Set.of());
-//            throw new ReleaseDateValidationException("Release date can not be earlier December 12, 1895");
+            throw new ReleaseDateValidationException("Release date can not be earlier December 12, 1895");
         }
 
         log.info("Start addition of film...");
