@@ -71,13 +71,11 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         Film film = movies.get(id);
 
-        if (film != null) {
-            Long filmLikes = film.getLikes();
-            Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
+        Long filmLikes = film.getLikes();
+        Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
-            if (!usersIdsLiked.contains(userId)) {
-                film.setLikes(filmLikes + 1);
-            }
+        if (!usersIdsLiked.contains(userId)) {
+            film.setLikes(filmLikes + 1);
         }
     }
 
@@ -86,13 +84,11 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         Film film = movies.get(id);
 
-        if (film != null) {
-            Long filmLikes = film.getLikes();
-            Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
+        Long filmLikes = film.getLikes();
+        Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
-            if (usersIdsLiked.contains(userId)) {
-                film.setLikes(filmLikes - 1);
-            }
+        if (usersIdsLiked.contains(userId)) {
+            film.setLikes(filmLikes - 1);
         }
     }
 
