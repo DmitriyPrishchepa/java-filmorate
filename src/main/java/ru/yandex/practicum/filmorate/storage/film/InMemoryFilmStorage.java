@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.util.FilmsLikesComparator;
 
 import java.util.*;
@@ -18,15 +17,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     public static final String RELEASE_DATE_BEFORE = "1895-12-28";
 
     private final FilmsLikesComparator filmsLikesComparator;
-    private final UserStorage us;
 
     @Autowired
     public InMemoryFilmStorage(
-            FilmsLikesComparator filmsLikesComparator,
-            UserStorage inMemoryUserStorage
+            FilmsLikesComparator filmsLikesComparator
     ) {
         this.filmsLikesComparator = filmsLikesComparator;
-        this.us = inMemoryUserStorage;
     }
 
     public final Map<Long, Film> movies = new HashMap<>();
@@ -56,7 +52,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(Long id) {
-
         log.trace("Получаем фильм по id...");
         Film film = movies.get(id);
 
@@ -69,7 +64,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void likeFilm(Long id, Long userId) {
-        Film film = movies.get(id); 
+        Film film = movies.get(id);
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
@@ -94,7 +89,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
-
         Optional<Integer> countOptional = Optional.ofNullable(count);
 
         if (countOptional.isPresent()) {
