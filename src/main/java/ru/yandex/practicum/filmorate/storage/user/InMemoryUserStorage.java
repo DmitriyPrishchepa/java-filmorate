@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.exeptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -57,6 +58,11 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
+
+        if (newUser.getId() == null) {
+            throw new ConditionsNotMetException("Parameter user id not found");
+        }
+
         newUser.setFriends(new HashSet<>());
         User user = getUserById(newUser.getId());
         users.put(user.getId(), newUser);
