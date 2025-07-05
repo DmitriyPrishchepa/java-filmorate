@@ -20,9 +20,9 @@ public interface FilmStorage {
 
     Film getFilmById(Long id);
 
-    Film likeFilm(Long id, Long userId);
+    void likeFilm(Long id, Long userId);
 
-    Film unlikeFilm(Long id, Long userId);
+    void unlikeFilm(Long id, Long userId);
 
     List<Film> getPopularFilms(Integer count);
 }

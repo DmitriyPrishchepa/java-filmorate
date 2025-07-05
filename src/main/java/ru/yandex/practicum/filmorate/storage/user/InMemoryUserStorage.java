@@ -49,10 +49,6 @@ public class InMemoryUserStorage implements UserStorage {
     public Optional<User> updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
         newUser.setFriends(new HashSet<>());
-
-        if (!users.containsKey(newUser.getId())) {
-            return Optional.empty();
-        }
         return Optional.ofNullable(users.computeIfPresent(newUser.getId(), (k, v) -> newUser));
     }
 
