@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import ru.yandex.practicum.filmorate.exception.exeptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceReturnNull(NullPointerException e) {
         log.error("Element doesn't exist");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleConditionsNotMetException(ConditionsNotMetException e) {
+        log.error("Not met");
         return new ErrorResponse(e.getMessage());
     }
 
