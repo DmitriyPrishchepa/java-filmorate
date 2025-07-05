@@ -51,7 +51,7 @@ public class InMemoryUserStorage implements UserStorage {
         log.trace("Вызван метод updateUser");
         newUser.setFriends(new HashSet<>());
 
-        if (users.get(newUser.getId()) == null) {
+        if (getUserById(newUser.getId()) == null) {
             throw new ElementNotFoundException("User unknown");
         }
 
