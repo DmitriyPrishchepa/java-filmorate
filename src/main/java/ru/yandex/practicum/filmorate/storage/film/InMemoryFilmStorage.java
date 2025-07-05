@@ -43,6 +43,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Start addition of film...");
         film.setId(getNexId());
         film.setLikes(0L);
+        film.setUsersIdsLiked(new HashSet<>());
         movies.put(film.getId(), film);
         return film;
     }
@@ -68,7 +69,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void likeFilm(Long id, Long userId) {
-        Film film = movies.get(id);
+        Film film = movies.get(id); 
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
