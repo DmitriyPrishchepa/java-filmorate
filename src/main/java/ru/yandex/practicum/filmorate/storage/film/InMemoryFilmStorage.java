@@ -45,11 +45,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film newFilm) {
         log.trace("Вызван метод updateFilm");
-
-        if (newFilm == null) {
-            throw new ConditionsNotMetException("Not met");
-        }
-
         Film film = getFilmById(newFilm.getId());
         movies.put(film.getId(), newFilm);
         return movies.get(film.getId());
@@ -57,6 +52,10 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(Long id) {
+
+        if (id == null) {
+            throw new ConditionsNotMetException("Id is null");
+        }
 
         log.trace("Получаем фильм по id...");
         Film film = movies.get(id);
