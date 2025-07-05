@@ -58,15 +58,17 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
         User user = getUserById(newUser.getId());
+        
+        if (user == null) {
+            throw new ElementNotFoundException("User not found");
+        }
+
         users.put(user.getId(), newUser);
         return users.get(user.getId());
     }
 
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
-
-        log.debug("userId {}", userId);
-        log.debug("friendId {}", friendId);
 
         User user = getUserById(userId);
         User friend = getUserById(friendId);
