@@ -108,19 +108,10 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
-        Optional<Integer> countOptional = Optional.ofNullable(count);
-
-        if (countOptional.isPresent()) {
-            return movies.values().stream()
-                    .sorted(filmsLikesComparator.reversed())
-                    .limit(count)
-                    .toList();
-        } else {
-            return movies.values().stream()
-                    .sorted(filmsLikesComparator.reversed())
-                    .limit(10)
-                    .toList();
-        }
+        return movies.values().stream()
+                .sorted(filmsLikesComparator.reversed())
+                .limit(Objects.requireNonNullElse(count, 10))
+                .toList();
     }
 
     @Override
