@@ -7,9 +7,11 @@ import java.time.LocalDate;
 
 public class DateReleaseValidator implements ConstraintValidator<ReleaseDateValidation, LocalDate> {
 
+    private LocalDate threshold;
+
     @Override
     public void initialize(ReleaseDateValidation constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
+        this.threshold = LocalDate.parse(constraintAnnotation.value());
     }
 
     @Override

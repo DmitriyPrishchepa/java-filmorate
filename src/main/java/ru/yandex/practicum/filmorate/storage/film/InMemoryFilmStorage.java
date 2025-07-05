@@ -34,7 +34,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film addFilm(Film film) {
         log.info("Start addition of film...");
         film.setId(getNexId());
-        film.setUsersIdsLiked(new HashSet<>());
         film.setLikes(0L);
         movies.put(film.getId(), film);
         return film;

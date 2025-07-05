@@ -5,10 +5,10 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
+@Documented
+@Constraint(validatedBy = DateReleaseValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = DateReleaseValidator.class)
-@Documented
 public @interface ReleaseDateValidation {
     String value();
 
