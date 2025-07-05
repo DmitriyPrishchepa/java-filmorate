@@ -58,9 +58,6 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
         User user = getUserById(newUser.getId());
-        if (user == null) {
-            throw new ElementNotFoundException("User not found");
-        }
         users.put(user.getId(), newUser);
         return users.get(user.getId());
     }

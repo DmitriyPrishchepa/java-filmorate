@@ -1,7 +1,11 @@
 package ru.yandex.practicum.filmorate.exception.exeptions;
 
-public class ReleaseDateValidationException extends RuntimeException {
+import jakarta.validation.ConstraintViolationException;
+
+import java.util.Set;
+
+public class ReleaseDateValidationException extends ConstraintViolationException {
     public ReleaseDateValidationException(String message) {
-        super(message);
+        super(Set.of(message));
     }
 }
