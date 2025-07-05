@@ -17,7 +17,7 @@ public interface UserStorage {
 
     Long getNexId();
 
-    Optional<User> getUserById(Long id);
+    User getUserById(Long id);
 
     Collection<User> addUserToFriends(Long userId, Long friendId);
 

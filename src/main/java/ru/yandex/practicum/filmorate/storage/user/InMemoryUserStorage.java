@@ -41,10 +41,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return users.values().stream()
-                .filter(user -> Objects.equals(user.getId(), id))
-                .findFirst();
+    public User getUserById(Long id) {
+        return users.get(id);
     }
 
     @Override
@@ -57,83 +55,60 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
-        Map<Long, User> usersFriends = new HashMap<>();
+        User user = getUserById(userId);
+        User friend = getUserById(friendId);
 
-        Optional<User> optionalUser = getUserById(userId);
-        Optional<User> optionalFriend = getUserById(friendId);
+        Set<Long> friendFriends = friend.getFriends();
+        Set<Long> friendNewFriends = new HashSet<>(friendFriends);
+        friendNewFriends.add(userId);
+        friend.setFriends(friendNewFriends);
 
-        if (optionalFriend.isPresent()) {
-            User friend = optionalFriend.get();
+        Set<Long> userFriends = user.getFriends();
+        Set<Long> newFriends = new HashSet<>(userFriends);
+        newFriends.add(friendId);
+        user.setFriends(newFriends);
 
-            Set<Long> friendFriends = friend.getFriends();
-            Set<Long> newFriends = new HashSet<>(friendFriends);
-            newFriends.add(userId);
-
-            friend.setFriends(newFriends);
-        }
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            Set<Long> userFriends = user.getFriends();
-            Set<Long> newFriends = new HashSet<>(userFriends);
-            newFriends.add(friendId);
-
-            user.setFriends(newFriends);
-
-            usersFriends = users.entrySet().stream()
-                    .filter(entry -> user.getFriends().contains(entry.getKey()))
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue
-                    ));
-        }
+        Map<Long, User> usersFriends = users.entrySet().stream()
+                .filter(entry -> user.getFriends().contains(entry.getKey()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
 
         return usersFriends.values();
     }
 
     @Override
     public void removeUserFromFriends(Long userId, Long friendId) {
-        Optional<User> optionalUser = getUserById(userId);
-        Optional<User> optionalFriend = getUserById(friendId);
 
-        if (optionalFriend.isPresent()) {
-            User friend = optionalFriend.get();
+        User user = getUserById(userId);
+        User friend = getUserById(friendId);
 
-            Set<Long> friendFriends = friend.getFriends();
-            Set<Long> newFriends = new HashSet<>(friendFriends);
-            newFriends.remove(userId);
+        Set<Long> friendFriends = friend.getFriends();
+        Set<Long> friendNewFriends = new HashSet<>(friendFriends);
+        friendNewFriends.remove(userId);
+        friend.setFriends(friendNewFriends);
 
-            friend.setFriends(newFriends);
-        }
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            Set<Long> userFriends = user.getFriends();
-            Set<Long> newFriends = new HashSet<>(userFriends);
-            newFriends.remove(friendId);
-
-            user.setFriends(newFriends);
-        }
+        Set<Long> userFriends = user.getFriends();
+        Set<Long> newFriends = new HashSet<>(userFriends);
+        newFriends.remove(friendId);
+        user.setFriends(newFriends);
     }
+
 
     @Override
     public ArrayList<User> getAllFriends(Long id) {
 
-        Map<Long, User> filteredUsers = new HashMap<>();
-        Optional<User> optionalUser = getUserById(id);
+        User user = getUserById(id);
 
-        if (optionalUser.isPresent()) {
-            Collection<Long> friendsIds = optionalUser.get().getFriends();
+        Collection<Long> friendsIds = user.getFriends();
 
-            filteredUsers = users.entrySet().stream()
-                    .filter(entry -> friendsIds.contains(entry.getKey()))
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue
-                    ));
-        }
+        Map<Long, User> filteredUsers = users.entrySet().stream()
+                .filter(entry -> friendsIds.contains(entry.getKey()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
 
         return new ArrayList<>(filteredUsers.values());
     }
@@ -141,19 +116,11 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
 
-        Collection<Long> userFriends = new HashSet<>();
-        Collection<Long> otherUserFriends = new HashSet<>();
+        User user = getUserById(userId);
+        User otherUser = getUserById(otherUserId);
 
-        Optional<User> optionalUser = getUserById(userId);
-        Optional<User> optionalOtherUser = getUserById(otherUserId);
-
-        if (optionalUser.isPresent()) {
-            userFriends = optionalUser.get().getFriends();
-        }
-
-        if (optionalOtherUser.isPresent()) {
-            otherUserFriends = optionalOtherUser.get().getFriends();
-        }
+        Collection<Long> userFriends = user.getFriends();
+        Collection<Long> otherUserFriends = otherUser.getFriends();
 
         Set<Long> commonFriendsIds = userFriends.stream()
                 .filter(otherUserFriends::contains)
