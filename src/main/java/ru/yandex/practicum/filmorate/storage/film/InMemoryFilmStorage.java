@@ -71,10 +71,11 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         Film film = movies.get(id);
 
+
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
-        if (!usersIdsLiked.contains(userId)) {
+        if (us.getUserById(userId) != null && !usersIdsLiked.contains(userId)) {
             film.setLikes(filmLikes + 1);
         }
     }
@@ -87,7 +88,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
-        if (usersIdsLiked.contains(userId)) {
+        if (us.getUserById(userId) != null && usersIdsLiked.contains(userId)) {
             film.setLikes(filmLikes - 1);
         }
     }
