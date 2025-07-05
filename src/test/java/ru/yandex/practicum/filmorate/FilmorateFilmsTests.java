@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cglib.core.Local;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -54,8 +55,9 @@ class FilmorateFilmsTests {
     }
 
     @Test
-    public void shouldReturnListOfUsers() {
+    public void shouldReturnListOfFilms() {
         filmController.addFilm(testFilm);
+        System.out.println(filmController.findAllFilms());
         assertTrue(filmController.findAllFilms().contains(testFilm));
     }
 
@@ -107,5 +109,15 @@ class FilmorateFilmsTests {
         messageException = "должно быть больше 0";
 
         assertEquals("должно быть больше 0", messageException);
+    }
+
+    @Test
+    public void shouldThrowExceptionIfReleaseDateIsIncorrect() {
+        testFilm.setReleaseDate(LocalDate.of(1850, 12, 11));
+        readException();
+
+        messageException = "дата должна быть больше 1895-12-28";
+
+        assertEquals("дата должна быть больше 1895-12-28", messageException);
     }
 }

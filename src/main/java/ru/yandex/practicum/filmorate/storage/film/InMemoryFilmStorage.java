@@ -14,6 +14,8 @@ import java.util.*;
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
+    public static final String RELEASE_DATE_BEFORE = "1895-12-28";
+
     private final FilmsLikesComparator filmsLikesComparator;
 
     @Autowired

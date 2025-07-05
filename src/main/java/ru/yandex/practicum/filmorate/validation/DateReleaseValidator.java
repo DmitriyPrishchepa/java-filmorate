@@ -16,6 +16,6 @@ public class DateReleaseValidator implements ConstraintValidator<ReleaseDateVali
 
     @Override
     public boolean isValid(LocalDate date, ConstraintValidatorContext constraintValidatorContext) {
-        return false;
+        return date.isAfter(threshold);
     }
 }
