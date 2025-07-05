@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -42,67 +41,99 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(Long id) {
-
-        User user = users.get(id);
-
-        if (user == null) {
-            log.error("Error: user not found");
-            throw new ElementNotFoundException("User not found");
-        }
-
-        return user;
+    public Optional<User> getUserById(Long id) {
+        return users.values().stream()
+                .filter(user -> Objects.equals(user.getId(), id))
+                .findFirst();
     }
 
     @Override
-    public User updateUser(User newUser) {
+    public Optional<User> updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
         newUser.setFriends(new HashSet<>());
-        User user = getUserById(newUser.getId());
-        users.put(user.getId(), newUser);
-        return users.get(user.getId());
+        return Optional.ofNullable(users.computeIfPresent(newUser.getId(), (k, v) -> newUser));
     }
 
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
-        User user = getUserById(userId);
-        User friend = getUserById(friendId);
+        Map<Long, User> usersFriends = new HashMap<>();
 
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        Optional<User> optionalUser = getUserById(userId);
+        Optional<User> optionalFriend = getUserById(friendId);
 
-        Map<Long, User> usersFriends = users.entrySet().stream()
-                .filter(entry -> user.getFriends().contains(entry.getKey()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
+        if (optionalFriend.isPresent()) {
+            User friend = optionalFriend.get();
+
+            Set<Long> friendFriends = friend.getFriends();
+            Set<Long> newFriends = new HashSet<>(friendFriends);
+            newFriends.add(userId);
+
+            friend.setFriends(newFriends);
+        }
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            Set<Long> userFriends = user.getFriends();
+            Set<Long> newFriends = new HashSet<>(userFriends);
+            newFriends.add(friendId);
+
+            user.setFriends(newFriends);
+
+            usersFriends = users.entrySet().stream()
+                    .filter(entry -> user.getFriends().contains(entry.getKey()))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue
+                    ));
+        }
 
         return usersFriends.values();
     }
 
     @Override
     public void removeUserFromFriends(Long userId, Long friendId) {
-        User user = getUserById(userId);
-        User friend = getUserById(friendId);
+        Optional<User> optionalUser = getUserById(userId);
+        Optional<User> optionalFriend = getUserById(friendId);
 
-        user.getFriends().remove(friend.getId());
-        friend.getFriends().remove(user.getId());
+        if (optionalFriend.isPresent()) {
+            User friend = optionalFriend.get();
+
+            Set<Long> friendFriends = friend.getFriends();
+            Set<Long> newFriends = new HashSet<>(friendFriends);
+            newFriends.remove(userId);
+
+            friend.setFriends(newFriends);
+        }
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            Set<Long> userFriends = user.getFriends();
+            Set<Long> newFriends = new HashSet<>(userFriends);
+            newFriends.remove(friendId);
+
+            user.setFriends(newFriends);
+        }
     }
 
     @Override
     public ArrayList<User> getAllFriends(Long id) {
-        User user = getUserById(id);
 
-        Collection<Long> friendsIds = user.getFriends();
+        Map<Long, User> filteredUsers = new HashMap<>();
+        Optional<User> optionalUser = getUserById(id);
 
-        Map<Long, User> filteredUsers = users.entrySet().stream()
-                .filter(entry -> friendsIds.contains(entry.getKey()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
+        if (optionalUser.isPresent()) {
+            Collection<Long> friendsIds = optionalUser.get().getFriends();
+
+            filteredUsers = users.entrySet().stream()
+                    .filter(entry -> friendsIds.contains(entry.getKey()))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue
+                    ));
+        }
 
         return new ArrayList<>(filteredUsers.values());
     }
@@ -110,11 +141,19 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
 
-        User user = getUserById(userId);
-        User otherUser = getUserById(otherUserId);
+        Collection<Long> userFriends = new HashSet<>();
+        Collection<Long> otherUserFriends = new HashSet<>();
 
-        Collection<Long> userFriends = user.getFriends();
-        Collection<Long> otherUserFriends = otherUser.getFriends();
+        Optional<User> optionalUser = getUserById(userId);
+        Optional<User> optionalOtherUser = getUserById(otherUserId);
+
+        if (optionalUser.isPresent()) {
+            userFriends = optionalUser.get().getFriends();
+        }
+
+        if (optionalOtherUser.isPresent()) {
+            otherUserFriends = optionalOtherUser.get().getFriends();
+        }
 
         Set<Long> commonFriendsIds = userFriends.stream()
                 .filter(otherUserFriends::contains)

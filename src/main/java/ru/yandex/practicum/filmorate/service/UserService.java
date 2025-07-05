@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -26,11 +27,11 @@ public class UserService {
         return userStorage.addUser(user);
     }
 
-    public User updateUser(User user) {
+    public Optional<User> updateUser(User user) {
         return userStorage.updateUser(user);
     }
 
-    public User getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         return userStorage.getUserById(id);
     }
 
