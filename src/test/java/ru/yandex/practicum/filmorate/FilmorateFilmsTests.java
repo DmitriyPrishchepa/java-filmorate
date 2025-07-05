@@ -14,6 +14,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.util.FilmsLikesComparator;
 
 import java.time.LocalDate;
@@ -29,7 +31,8 @@ class FilmorateFilmsTests {
     String messageException;
     Film testFilm;
     FilmsLikesComparator comparator = new FilmsLikesComparator();
-    FilmStorage filmStorage = new InMemoryFilmStorage(comparator);
+    UserStorage us = new InMemoryUserStorage();
+    FilmStorage filmStorage = new InMemoryFilmStorage(comparator, us);
     FilmService filmService = new FilmService(filmStorage);
     FilmController filmController = new FilmController(filmService);
 
