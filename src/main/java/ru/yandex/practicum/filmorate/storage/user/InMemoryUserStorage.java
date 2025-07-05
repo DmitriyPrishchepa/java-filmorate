@@ -65,6 +65,9 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
+        log.debug("userId {}", userId);
+        log.debug("friendId {}", friendId);
+
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
@@ -108,6 +111,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
+
         User user = getUserById(userId);
         User otherUser = getUserById(otherUserId);
 
