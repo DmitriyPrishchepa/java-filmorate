@@ -68,9 +68,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void likeFilm(Long id, Long userId) {
-
         Film film = movies.get(id);
-        
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
@@ -81,9 +79,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void unlikeFilm(Long id, Long userId) {
-
         Film film = movies.get(id);
-
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
