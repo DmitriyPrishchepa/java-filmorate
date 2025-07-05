@@ -57,6 +57,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
+        newUser.setFriends(new HashSet<>());
         User user = getUserById(newUser.getId());
         users.put(user.getId(), newUser);
         return users.get(user.getId());
