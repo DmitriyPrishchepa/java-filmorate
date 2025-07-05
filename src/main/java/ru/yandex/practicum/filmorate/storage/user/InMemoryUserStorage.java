@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -49,6 +50,11 @@ public class InMemoryUserStorage implements UserStorage {
     public Optional<User> updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
         newUser.setFriends(new HashSet<>());
+
+        if (users.get(newUser.getId()) == null) {
+            throw new ElementNotFoundException("User unknown");
+        }
+
         return Optional.ofNullable(users.computeIfPresent(newUser.getId(), (k, v) -> newUser));
     }
 
