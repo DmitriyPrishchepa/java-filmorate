@@ -4,11 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.exception.exeptions.ReleaseDateValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.FilmsLikesComparator;
 
-import java.time.LocalDate;
 import java.util.*;
 
 
@@ -24,7 +22,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public final Map<Long, Film> movies = new HashMap<>();
-    private final LocalDate releaseDateBefore = LocalDate.of(1895, 12, 28);
+
 
     @Override
     public Collection<Film> getAllFilms() {
@@ -34,12 +32,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
-
-        if (film.getReleaseDate().isBefore(releaseDateBefore)) {
-            log.debug("ReleaseDate {}", film.getReleaseDate());
-            throw new ReleaseDateValidationException("Release date can not be earlier December 12, 1895");
-        }
-
         log.info("Start addition of film...");
         film.setId(getNexId());
         film.setUsersIdsLiked(new HashSet<>());
