@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.exeptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -54,6 +55,10 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
+
+        if (userId == null || friendId == null) {
+            throw new ConditionsNotMetException("id is missing");
+        }
 
         User user = getUserById(userId);
         User friend = getUserById(friendId);
