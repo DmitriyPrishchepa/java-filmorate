@@ -75,7 +75,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (film == null) {
             throw new ElementNotFoundException("Film not found");
         }
-        
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
