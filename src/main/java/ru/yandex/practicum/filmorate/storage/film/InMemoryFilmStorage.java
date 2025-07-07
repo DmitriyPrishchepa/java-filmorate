@@ -57,6 +57,10 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new ElementNotFoundException("Film not found");
         }
 
+        if (film.getId() == null) {
+            throw new ElementNotFoundException("Film id is missing");
+        }
+
         movies.put(film.getId(), newFilm);
         return newFilm;
     }
