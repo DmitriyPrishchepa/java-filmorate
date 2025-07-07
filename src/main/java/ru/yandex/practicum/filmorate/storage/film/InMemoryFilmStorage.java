@@ -71,6 +71,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void likeFilm(Long id, Long userId) {
         Film film = movies.get(id);
+
+        if (film == null) {
+            throw new ElementNotFoundException("Film not found");
+        }
+        
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
 
@@ -86,7 +91,12 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void unlikeFilm(Long id, Long userId) {
-        Film film = movies.get(id);
+        Film film = getFilmById(id);
+
+        if (film == null) {
+            throw new ElementNotFoundException("Film not found");
+        }
+
         Long filmLikes = film.getLikes();
         Set<Long> usersIdsLiked = film.getUsersIdsLiked();
 
