@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public interface UserStorage {
@@ -12,7 +13,7 @@ public interface UserStorage {
 
     User addUser(User user);
 
-    User updateUser(User user);
+    Optional<User> updateUser(User user);
 
     Long getNexId();
 
