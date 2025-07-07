@@ -52,7 +52,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film updateFilm(Film newFilm) {
         log.trace("Вызван метод updateFilm");
 
-        if (getFilmById(newFilm.getId()) == null) {
+        Film film = getFilmById(newFilm.getId());
+
+        if (film == null) {
             throw new ElementNotFoundException("Film not found");
         }
 

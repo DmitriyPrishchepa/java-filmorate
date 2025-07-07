@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ResponseBody
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceReturnNull(NullPointerException e) {
@@ -24,6 +25,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ResponseBody
     @ExceptionHandler(ValidateLoginIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
@@ -49,6 +51,7 @@ public class GlobalExceptionHandler {
         return new ValidationErrorResponse(violations);
     }
 
+    @ResponseBody
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceReturnNotFound(ElementNotFoundException e) {
