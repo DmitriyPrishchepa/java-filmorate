@@ -52,10 +52,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film updateFilm(Film newFilm) {
         log.trace("Вызван метод updateFilm");
         Film film = getFilmById(newFilm.getId());
-        if (film == null) {
-            throw new ElementNotFoundException("Film not found");
-        }
-
         movies.put(film.getId(), newFilm);
         return newFilm;
     }
@@ -63,6 +59,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film getFilmById(Long id) {
         log.trace("Получаем фильм по id...");
+        
         Film film = movies.get(id);
 
         if (film == null) {
