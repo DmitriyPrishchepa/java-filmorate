@@ -29,12 +29,10 @@ public class GlobalExceptionHandler {
         log.warn("Incorrect login");
         return new ErrorResponse(e.getMessage());
     }
-    
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse onConstraintValidationException(
-            ConstraintViolationException e
-    ) {
+    public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
         log.warn("Duplicate entries or Foreign Key Violations or Not Null Constraints");
         final List<Violation> violations = e.getConstraintViolations().stream()
                 .map(
