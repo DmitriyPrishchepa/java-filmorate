@@ -27,8 +27,7 @@ public class GlobalExceptionHandler {
         log.warn("Incorrect login");
         return new ErrorResponse(e.getMessage());
     }
-
-    @ResponseBody
+    
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrorResponse onConstraintValidationException(
