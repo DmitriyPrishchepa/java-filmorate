@@ -15,18 +15,21 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceReturnNull(NullPointerException e) {
         log.error("Element doesn't exist");
         return new ErrorResponse(e.getMessage());
     }
+
     @ExceptionHandler(ValidateLoginIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
         log.warn("Incorrect login");
         return new ErrorResponse(e.getMessage());
     }
+    
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrorResponse onConstraintValidationException(
