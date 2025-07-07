@@ -55,12 +55,5 @@ public class GlobalExceptionHandler {
         log.error("Element not found");
         return new ErrorResponse(e.getMessage());
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleNotMet(NotMetConditionsException e) {
-        log.error("Parameter is missing");
-        return new ErrorResponse(e.getMessage());
-    }
 }
 
