@@ -69,7 +69,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Long likeFilm(Long id, Long userId) {
+    public void likeFilm(Long id, Long userId) {
         Film film = movies.get(id);
         Long filmLikes = film.getLikes();
         Collection<Long> usersIdsLiked = film.getUsersIdsLiked();
@@ -81,14 +81,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!usersIdsLiked.contains(userId)) {
             usersIdsLiked.add(userId);
             film.setLikes(filmLikes + 1);
-            return film.getLikes();
         }
-
-        return 0L;
     }
 
     @Override
-    public Long unlikeFilm(Long id, Long userId) {
+    public void unlikeFilm(Long id, Long userId) {
         Film film = movies.get(id);
         Long filmLikes = film.getLikes();
         Set<Long> usersIdsLiked = film.getUsersIdsLiked();
@@ -101,11 +98,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             film.setLikes(filmLikes - 1);
             usersIdsLiked.remove(userId);
             film.setUsersIdsLiked(usersIdsLiked);
-
-            return film.getLikes();
         }
-
-        return 0L;
     }
 
     @Override
