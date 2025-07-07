@@ -3,21 +3,17 @@ package ru.yandex.practicum.filmorate.exception;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ResponseBody
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceReturnNull(NullPointerException e) {
@@ -25,7 +21,6 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ResponseBody
     @ExceptionHandler(ValidateLoginIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleResourceIncorrectLogin(ValidateLoginIncorrectException e) {
@@ -51,7 +46,6 @@ public class GlobalExceptionHandler {
         return new ValidationErrorResponse(violations);
     }
 
-    @ResponseBody
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceReturnNotFound(ElementNotFoundException e) {
