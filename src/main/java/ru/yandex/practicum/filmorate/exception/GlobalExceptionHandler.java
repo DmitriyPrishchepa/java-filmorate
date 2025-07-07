@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.exception.exeptions.NotMetConditionsException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 
 import java.util.List;
