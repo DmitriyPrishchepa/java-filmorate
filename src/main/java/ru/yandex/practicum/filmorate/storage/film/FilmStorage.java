@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public interface FilmStorage {
@@ -14,7 +13,7 @@ public interface FilmStorage {
 
     Film addFilm(Film film);
 
-    Optional<Film> updateFilm(Film film);
+    Film updateFilm(Film film);
 
     Long getNexId();
 
