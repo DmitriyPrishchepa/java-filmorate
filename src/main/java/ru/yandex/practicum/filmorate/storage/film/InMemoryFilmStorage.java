@@ -51,20 +51,18 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Optional<Film> updateFilm(Film newFilm) {
         log.trace("Вызван метод updateFilm");
-
         Optional<Film> optionalFilm = Optional.ofNullable(getFilmById(newFilm.getId()));
 
-        try {
-            if (optionalFilm.isPresent()) {
-                Film film = optionalFilm.get();
-                movies.put(film.getId(), newFilm);
-                return Optional.of(film);
-            }
-        } catch (RuntimeException e) {
-            throw new ElementNotFoundException("Unknown film");
-        }
+        optionalFilm.ifPresentOrElse(
+                film -> {
+                    movies.put(film.getId(), newFilm);
+                },
+                () -> {
+                    throw new ElementNotFoundException("Unknown film");
+                }
+        );
 
-        return Optional.empty();
+        return Optional.ofNullable(getFilmById(newFilm.getId()));
     }
 
     @Override
