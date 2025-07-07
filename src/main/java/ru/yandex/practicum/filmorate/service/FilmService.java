@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FilmService {
@@ -26,7 +27,7 @@ public class FilmService {
         return filmStorage.addFilm(film);
     }
 
-    public Film updateFilm(Film film) {
+    public Optional<Film> updateFilm(Film film) {
         return filmStorage.updateFilm(film);
     }
 
