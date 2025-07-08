@@ -23,5 +23,5 @@ public interface FilmStorage {
 
     void unlikeFilm(Long id, Long userId);
 
-    List<Film> getPopularFilms(int count);
+    List<Film> getPopularFilms(Integer count);
 }

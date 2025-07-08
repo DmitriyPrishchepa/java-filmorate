@@ -26,12 +26,6 @@ public class InMemoryUserStorage implements UserStorage {
     public User addUser(User user) {
 
         log.info("Start addition of users...");
-
-        if (user.getLogin().contains(" ")) {
-            log.warn("Warning: Incorrect user login {}", user.getLogin());
-            throw new ValidateLoginIncorrectException("User email can not contains white space symbols");
-        }
-
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
