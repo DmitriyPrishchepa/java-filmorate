@@ -60,10 +60,15 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         User user = getUserById(userId);
+
+        if (user == null) {
+            throw new ElementNotFoundException("User not found");
+        }
+        
         User friend = getUserById(friendId);
 
-        if (user == null || friend == null) {
-            throw new ElementNotFoundException("User not found");
+        if (friend == null) {
+            throw new ElementNotFoundException("Friend not found");
         }
 
         Set<Long> friendFriends = friend.getFriends();
