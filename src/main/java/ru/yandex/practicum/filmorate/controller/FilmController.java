@@ -20,6 +20,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmService filmService;
+    public static final String DEFAULT_FILM_LIST_SIZE = "10";
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -58,7 +59,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@Positive @RequestParam(required = false) Integer count) {
+    public List<Film> getPopularFilms(@Positive @RequestParam(defaultValue = DEFAULT_FILM_LIST_SIZE) Integer count) {
         return filmService.getPopularFilms(count);
     }
 }
