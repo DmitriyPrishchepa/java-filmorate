@@ -58,7 +58,7 @@ public class FilmController {
         filmService.unLikeFilm(id, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/popular/count")
     public List<Film> getPopularFilms(@Positive @RequestParam(defaultValue = DEFAULT_FILM_LIST_SIZE) Integer count) {
         return filmService.getPopularFilms(count);
     }
