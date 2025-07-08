@@ -41,9 +41,17 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> updateUser(User newUser) {
+    public User updateUser(User newUser) {
         log.trace("Вызван метод updateUser");
-        return Optional.ofNullable(users.computeIfPresent(newUser.getId(), (k, v) -> newUser));
+
+        User user = getUserById(newUser.getId());
+
+        if (user == null) {
+            throw new ElementNotFoundException("User not found");
+        }
+
+        users.put(user.getId(), newUser);
+        return newUser;
     }
 
     @Override
