@@ -58,6 +58,8 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new ElementNotFoundException("Film not found");
         }
 
+        newFilm.setLikes(film.getLikes());
+        newFilm.setUsersIdsLiked(film.getUsersIdsLiked());
         movies.put(newFilm.getId(), newFilm);
         return newFilm;
     }

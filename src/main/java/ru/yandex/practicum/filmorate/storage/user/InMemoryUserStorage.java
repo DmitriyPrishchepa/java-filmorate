@@ -50,6 +50,7 @@ public class InMemoryUserStorage implements UserStorage {
             throw new ElementNotFoundException("User not found");
         }
 
+        newUser.setFriends(user.getFriends());
         users.put(user.getId(), newUser);
         return newUser;
     }
