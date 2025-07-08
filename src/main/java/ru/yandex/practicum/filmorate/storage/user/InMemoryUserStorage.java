@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
+import ru.yandex.practicum.filmorate.exception.exeptions.ParameterIsMissingException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -55,12 +56,8 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
-        if (userId == null) {
-            throw new ElementNotFoundException("user id not found");
-        }
-
-        if (friendId == null) {
-            throw new ElementNotFoundException("friend id not found");
+        if (userId == null || friendId == null) {
+            throw new ParameterIsMissingException("id not found");
         }
 
         User user = getUserById(userId);
@@ -98,7 +95,7 @@ public class InMemoryUserStorage implements UserStorage {
     public void removeUserFromFriends(Long userId, Long friendId) {
 
         if (userId == null || friendId == null) {
-            throw new ElementNotFoundException("id not found");
+            throw new ParameterIsMissingException("id not found");
         }
 
         User user = getUserById(userId);
@@ -124,6 +121,10 @@ public class InMemoryUserStorage implements UserStorage {
     public ArrayList<User> getAllFriends(Long id) {
 
         User user = getUserById(id);
+
+        if (user == null) {
+            throw new ElementNotFoundException("User not found");
+        }
 
         Collection<Long> friendsIds = user.getFriends();
 
