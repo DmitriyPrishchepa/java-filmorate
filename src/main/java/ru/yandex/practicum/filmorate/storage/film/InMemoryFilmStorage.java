@@ -115,7 +115,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> getPopularFilms(Integer count) {
         return movies.values().stream()
                 .sorted(filmsLikesComparator.reversed())
-                .limit(Objects.requireNonNullElse(count, 10))
+                .limit(Objects.requireNonNullElse(count, getPopularCount(count)))
                 .toList();
     }
 
@@ -127,5 +127,12 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .orElse(0);
         log.debug("currentFilmMaxId {}", currentMaxId);
         return ++currentMaxId;
+    }
+
+    private Integer getPopularCount(Integer count) {
+        if (count > movies.size()) {
+            return movies.size();
+        }
+        return count;
     }
 }
