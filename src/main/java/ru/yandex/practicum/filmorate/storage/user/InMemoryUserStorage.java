@@ -64,7 +64,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (user == null) {
             throw new ElementNotFoundException("User not found");
         }
-        
         User friend = getUserById(friendId);
 
         if (friend == null) {
