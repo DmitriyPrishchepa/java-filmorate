@@ -55,8 +55,12 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> addUserToFriends(Long userId, Long friendId) {
 
-        if (userId == null || friendId == null) {
-            throw new ElementNotFoundException("id not found");
+        if (userId == null) {
+            throw new ElementNotFoundException("user id not found");
+        }
+
+        if (friendId == null) {
+            throw new ElementNotFoundException("friend id not found");
         }
 
         User user = getUserById(userId);
