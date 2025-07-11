@@ -26,4 +26,6 @@ public class Film {
     private Set<Long> usersIdsLiked;
     @PositiveOrZero
     private Long likes;
+    private Set<String> genres;
+    private String mpa;
 }
