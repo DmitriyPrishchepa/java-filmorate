@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
+import ru.yandex.practicum.filmorate.exception.exeptions.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ParameterIsMissingException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
 
@@ -57,6 +58,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleParameterIsMissing(ParameterIsMissingException e) {
         log.error("Parameter is missing");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleInternalError(InternalServerException e) {
+        log.error("Internal Server Error");
         return new ErrorResponse(e.getMessage());
     }
 }

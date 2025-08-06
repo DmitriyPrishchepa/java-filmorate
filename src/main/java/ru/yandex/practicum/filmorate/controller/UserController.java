@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.dto.dtos.UserDto;
+import ru.yandex.practicum.filmorate.dto.requests.user_requests.NewUserRequest;
+import ru.yandex.practicum.filmorate.dto.requests.user_requests.UpdateUserRequest;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
@@ -26,31 +29,25 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> findAllUsers() {
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<UserDto> findAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto addUser(@Valid @RequestBody NewUserRequest user) {
         return userService.addUser(user);
     }
 
-    @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
-        return userService.updateUser(user);
+    @PutMapping("/userId")
+    public UserDto updateUser(@PathVariable("userId") long userId, @Valid @RequestBody UpdateUserRequest user) {
+        return userService.updateUser(userId, user);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") @Positive Long id) {
+    public UserDto getUserById(@PathVariable("id") @Positive Long id) {
         return userService.getUserById(id);
-    }
-
-    @PutMapping("/{id}/friends/{friendId}")
-    public Collection<User> addUserToFriends(
-            @PathVariable @Positive Long id,
-            @PathVariable @Positive Long friendId
-    ) {
-        return userService.addUserToFriends(id, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
@@ -62,12 +59,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getAllFriends(@PathVariable @Positive Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDto> getAllFriends(@PathVariable("id") @Positive Long id) {
         return userService.getAllFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable @Positive Long id, @Positive @PathVariable Long otherId) {
+    public List<UserDto> getCommonFriends(@PathVariable("id") @Positive Long id, @Positive @PathVariable("otherId") Long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 }

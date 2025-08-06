@@ -2,11 +2,17 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dto.dtos.FilmDto;
+import ru.yandex.practicum.filmorate.dto.requests.films_requests.NewFilmRequest;
+import ru.yandex.practicum.filmorate.dto.requests.films_requests.UpdateFilmRequest;
+import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FilmService {
@@ -18,20 +24,32 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    public Collection<Film> getAllFilms() {
-        return filmStorage.getAllFilms();
+    public Collection<FilmDto> getAllFilms(Set<Long> genresIds, Long mpaId) {
+        return filmStorage.getAllFilms(genresIds, mpaId)
+                .stream()
+                .map(FilmMapper::mapFilmToDto)
+                .toList();
     }
 
-    public Film addFilm(Film film) {
-        return filmStorage.addFilm(film);
+    public FilmDto addFilm(NewFilmRequest request, Set<Long> genresIds, Long mpaId) {
+        Film film = FilmMapper.mapToFilm(request);
+        film = filmStorage.addFilm(film, genresIds, mpaId);
+        return FilmMapper.mapFilmToDto(film);
     }
 
-    public Film updateFilm(Film film) {
-        return filmStorage.updateFilm(film);
+    public FilmDto updateFilm(long filmId, UpdateFilmRequest request, Set<Long> genresIds, Long mpaId) {
+        Film updatedFilm = filmStorage.getFilmById(filmId)
+                .map(film -> FilmMapper.updateFilmFields(film, request))
+                .orElseThrow(() -> new ElementNotFoundException("Film not found"));
+
+        updatedFilm = filmStorage.updateFilm(updatedFilm, genresIds, mpaId);
+        return FilmMapper.mapFilmToDto(updatedFilm);
     }
 
-    public Film getFilmById(Long id) {
-        return filmStorage.getFilmById(id);
+    public FilmDto getFilmById(Long id) {
+        return filmStorage.getFilmById(id)
+                .map(FilmMapper::mapFilmToDto)
+                .orElseThrow(() -> new ElementNotFoundException("Film not found"));
     }
 
     public void likeFilm(Long id, Long userId) {
@@ -42,7 +60,10 @@ public class FilmService {
         filmStorage.unlikeFilm(id, userId);
     }
 
-    public List<Film> getPopularFilms(Integer count) {
-        return filmStorage.getPopularFilms(count);
+    public List<FilmDto> getPopularFilms(Integer count) {
+        return filmStorage.getPopularFilms(count)
+                .stream()
+                .map(FilmMapper::mapFilmToDto)
+                .toList();
     }
 }

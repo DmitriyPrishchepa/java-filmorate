@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@Component
 public class DateReleaseValidator implements ConstraintValidator<ReleaseDateValidation, LocalDate> {
 
     private LocalDate threshold;
