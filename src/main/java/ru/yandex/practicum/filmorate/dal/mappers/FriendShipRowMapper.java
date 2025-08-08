@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate.dal.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.FriendShip;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Component("friendShipRowMapper")
+@Service
 public class FriendShipRowMapper implements RowMapper<FriendShip> {
     @Override
     public FriendShip mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -38,7 +38,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     "JOIN friendship AS f2 ON f1.friend_id = f2.friend_id " +
                     "WHERE f1.user_id = ? AND f2.user_id = ? AND f1.status = ? AND f2.status = true";
 
-    public UserDbStorage(JdbcTemplate jdbc, @Qualifier("userRowMapper") RowMapper<User> mapper) {
+    public UserDbStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
     }
 

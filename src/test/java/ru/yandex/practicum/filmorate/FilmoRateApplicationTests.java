@@ -2,14 +2,10 @@
 //
 //import lombok.RequiredArgsConstructor;
 //import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 //import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-//import org.springframework.context.annotation.Import;
+//import org.springframework.boot.test.context.SpringBootTest;
 //import ru.yandex.practicum.filmorate.model.User;
 //import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 //
@@ -17,10 +13,9 @@
 //
 //import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 //
-//@JdbcTest
+//@SpringBootTest
 //@AutoConfigureTestDatabase
 //@RequiredArgsConstructor(onConstructor_ = @Autowired)
-//@Import({UserDbStorage.class})
 //class FilmoRateApplicationTests {
 //
 //    private final UserDbStorage userStorage;
