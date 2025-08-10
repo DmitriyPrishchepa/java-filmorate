@@ -1,19 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
     private static final String INSERT_QUERY =
@@ -21,7 +23,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     "VALUES (?, ?, ?, ?) returning id";
     private static final String UPDATE_QUERY =
             "UPDATE users SET " +
-                    "name = ?, email = ?, login = ?, duration = ?, birthday = ? WHERE id = ?";
+                    "name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
 
     private static final String GET_FRIENDS_OF_USER =
@@ -49,27 +51,44 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        long id = insert(
-                INSERT_QUERY,
-                user.getName(),
-                user.getEmail(),
-                user.getLogin(),
-                Timestamp.from(Instant.from(user.getBirthday()))
-        );
 
-        user.setId(id);
+        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
+
+        try {
+            long id = insert(
+                    INSERT_QUERY,
+                    user.getName(),
+                    user.getEmail(),
+                    user.getLogin(),
+                    timestamp
+            );
+
+            user.setId(id);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        update(
-                UPDATE_QUERY,
-                user.getName(),
-                user.getEmail(),
-                user.getLogin(),
-                user.getBirthday()
-        );
+
+        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
+
+        try {
+            update(
+                    UPDATE_QUERY,
+                    user.getName(),
+                    user.getEmail(),
+                    user.getLogin(),
+                    timestamp
+            );
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
         return user;
     }
 

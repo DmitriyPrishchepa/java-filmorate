@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class NewFilmRequest {
@@ -18,6 +19,5 @@ public class NewFilmRequest {
     private Integer duration;
     @Positive
     private Integer mpaId;
-
-
+    private Set<Long> genres;
 }

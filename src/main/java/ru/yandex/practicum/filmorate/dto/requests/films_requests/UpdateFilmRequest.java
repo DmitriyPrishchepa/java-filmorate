@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.dto.requests.films_requests;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class UpdateFilmRequest {
@@ -11,6 +12,7 @@ public class UpdateFilmRequest {
     private LocalDate releaseDate;
     private Integer duration;
     private Integer mpaId;
+    private Set<Long> genres;
 
     public boolean hasName() {
         return !(name == null || name.isBlank());
@@ -30,5 +32,9 @@ public class UpdateFilmRequest {
 
     public boolean hasMpaId() {
         return false;
+    }
+
+    public boolean hasGenres() {
+        return (genres != null && !genres.isEmpty());
     }
 }

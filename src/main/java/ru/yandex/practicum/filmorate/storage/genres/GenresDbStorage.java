@@ -14,6 +14,11 @@ public class GenresDbStorage extends BaseRepository<Genre> implements GenreStora
 
     private static final String GET_GENRES_QUERY = "SELECT * FROM genres";
     private static final String GET_GENRES_BY_ID_QUERY = "SELECT * FROM genres WHERE id = ?";
+    private static final String GET_GENRES_OF_FILM_QUERY =
+            "SELECT g.id" +
+                    "FROM genres AS g " +
+                    "JOIN film_genres as fg ON g.id = fg.genre_id " +
+                    "WHERE fg.film_id = ?";
 
     public GenresDbStorage(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
@@ -27,5 +32,10 @@ public class GenresDbStorage extends BaseRepository<Genre> implements GenreStora
     @Override
     public Optional<Genre> getGenreById(long id) {
         return findOne(GET_GENRES_BY_ID_QUERY, id);
+    }
+
+    @Override
+    public List<Genre> getGenresByFilmId(Long filmId) {
+        return findMany(GET_GENRES_OF_FILM_QUERY, filmId);
     }
 }

@@ -30,6 +30,7 @@ public class FilmMapper {
                 .releaseDate(request.getReleaseDate())
                 .duration(request.getDuration())
                 .mpaId(request.getMpaId())
+                .genres(request.getGenres())
                 .build();
     }
 
@@ -48,6 +49,9 @@ public class FilmMapper {
         }
         if (request.hasMpaId()) {
             film.setMpaId(request.getMpaId());
+        }
+        if (request.hasGenres()) {
+            film.setGenres(request.getGenres());
         }
         return film;
     }

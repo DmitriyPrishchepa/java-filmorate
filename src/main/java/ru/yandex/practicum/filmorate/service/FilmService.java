@@ -31,18 +31,18 @@ public class FilmService {
                 .toList();
     }
 
-    public FilmDto addFilm(NewFilmRequest request, Set<Long> genresIds, Long mpaId) {
+    public FilmDto addFilm(NewFilmRequest request) {
         Film film = FilmMapper.mapToFilm(request);
-        film = filmStorage.addFilm(film, genresIds, mpaId);
+        film = filmStorage.addFilm(film);
         return FilmMapper.mapFilmToDto(film);
     }
 
-    public FilmDto updateFilm(long filmId, UpdateFilmRequest request, Set<Long> genresIds, Long mpaId) {
+    public FilmDto updateFilm(long filmId, UpdateFilmRequest request) {
         Film updatedFilm = filmStorage.getFilmById(filmId)
                 .map(film -> FilmMapper.updateFilmFields(film, request))
                 .orElseThrow(() -> new ElementNotFoundException("Film not found"));
 
-        updatedFilm = filmStorage.updateFilm(updatedFilm, genresIds, mpaId);
+        updatedFilm = filmStorage.updateFilm(updatedFilm);
         return FilmMapper.mapFilmToDto(updatedFilm);
     }
 

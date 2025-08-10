@@ -38,18 +38,14 @@ public class FilmController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FilmDto addFilm(@Valid @RequestBody NewFilmRequest film,
-                           @RequestParam(value = "genresIds", required = false) Set<Long> genresIds,
-                           @RequestParam("mpaId") Long mpaId) {
-        return filmService.addFilm(film, genresIds, mpaId);
+    public FilmDto addFilm(@Valid @RequestBody NewFilmRequest film) {
+        return filmService.addFilm(film);
     }
 
     @PutMapping("/{id}")
     public FilmDto updateFilm(@PathVariable("id") long id,
-                              @Valid @RequestBody UpdateFilmRequest film,
-                              @RequestParam(value = "genresIds", required = false) Set<Long> genresIds,
-                              @RequestParam(value = "mpaId", required = false) Long mpaId) {
-        return filmService.updateFilm(id, film, genresIds, mpaId);
+                              @Valid @RequestBody UpdateFilmRequest film) {
+        return filmService.updateFilm(id, film);
     }
 
     @GetMapping("/{id}")

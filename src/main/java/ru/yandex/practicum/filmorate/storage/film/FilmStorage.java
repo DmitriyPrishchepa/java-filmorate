@@ -13,9 +13,9 @@ public interface FilmStorage {
 
     Collection<Film> getAllFilms(Set<Long> genresIds, Long mpaId);
 
-    Film addFilm(Film film, Set<Long> genresIds, Long mpaId);
+    Film addFilm(Film film);
 
-    Film updateFilm(Film film, Set<Long> genresIds, Long mpaId);
+    Film updateFilm(Film film);
 
     Optional<Film> getFilmById(Long id);
 

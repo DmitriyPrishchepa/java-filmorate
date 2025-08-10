@@ -1,14 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 @Component
@@ -22,7 +21,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                     "WHERE fg.genre_id = ? AND m.id = ?";
     ;
     private static final String INSERT_QUERY = "INSERT INTO films(name, description, release_date, duration, mpa_id) " +
-            "VALUES (?, ?, ?, ?) returning id";
+            "VALUES (?, ?, ?, ?, ?) returning id";
     private static final String UPDATE_QUERY = "UPDATE films SET " +
             "name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE id = ?";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
@@ -52,45 +51,60 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     @Override
-    public Film addFilm(Film film, Set<Long> genresIds, Long mpaId) {
-        long id = insert(
-                INSERT_QUERY,
-                film.getName(),
-                film.getDescription(),
-                Timestamp.from(Instant.from(film.getReleaseDate())),
-                film.getDuration(),
-                mpaId
-        );
-        film.setId(id);
+    public Film addFilm(Film film) {
 
-        for (Long genreId : genresIds) {
-            insert(
-                    INSERT_INTO_FILM_GENRES,
-                    id,
-                    genreId
+        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(film);
+
+        try {
+            long id = insert(
+                    INSERT_QUERY,
+                    film.getName(),
+                    film.getDescription(),
+                    timestamp,
+                    film.getDuration(),
+                    film.getMpaId(),
+                    film.getGenres()
             );
+
+            film.setId(id);
+
+            if (film.getGenres() != null) {
+                for (Long genreId : film.getGenres()) {
+                    insert(
+                            INSERT_INTO_FILM_GENRES,
+                            film.getId(),
+                            genreId
+                    );
+                }
+            }
+        } catch (
+                RuntimeException e) {
+            e.getStackTrace();
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
 
         return film;
     }
 
     @Override
-    public Film updateFilm(Film film, Set<Long> genresIds, Long mpaId) {
+    public Film updateFilm(Film film) {
         update(
                 UPDATE_QUERY,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                mpaId
+                film.getMpaId()
         );
 
-        for (Long genreId : genresIds) {
-            update(
-                    UPDATE_GENRES_IDS,
-                    film.getId(),
-                    genreId
-            );
+        if (film.getGenres() != null) {
+            for (Long genreId : film.getGenres()) {
+                update(
+                        UPDATE_GENRES_IDS,
+                        film.getId(),
+                        genreId
+                );
+            }
         }
 
         return film;
