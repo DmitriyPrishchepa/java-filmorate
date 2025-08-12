@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS films (
     description varchar NOT NULL,
     release_date timestamp NOT NULL,
     duration integer NOT NULL,
-    mpa_id integer
+    mpa_id integer DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS friendship (

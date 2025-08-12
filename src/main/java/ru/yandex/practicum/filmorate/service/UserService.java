@@ -1,18 +1,15 @@
 package ru.yandex.practicum.filmorate.service;
 
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dto.dtos.UserDto;
-import ru.yandex.practicum.filmorate.dto.requests.user_requests.NewUserRequest;
-import ru.yandex.practicum.filmorate.dto.requests.user_requests.UpdateUserRequest;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.util.UserUpdater;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -24,31 +21,29 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-    public Collection<UserDto> getAllUsers() {
-        return userStorage.getAllUsers()
-                .stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public Collection<User> getAllUsers() {
+        return userStorage.getAllUsers();
     }
 
-    public UserDto addUser(NewUserRequest request) {
-        User user = UserMapper.mapToUser(request);
-        user = userStorage.addUser(user);
-        return UserMapper.mapUserToDto(user);
+    public User addUser(User request) {
+        return userStorage.addUser(request);
     }
 
-    public UserDto updateUser(long userId, UpdateUserRequest request) {
-        User updatedUser = userStorage.getUserById(userId)
-                .map(user -> UserMapper.updateUserFields(user, request))
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+    public User updateUser(long userId, User request) throws ElementNotFoundException {
+        Optional<User> updatedUserOptional = userStorage.getUserById(userId);
 
-        updatedUser = userStorage.updateUser(updatedUser);
-        return UserMapper.mapUserToDto(updatedUser);
+        if (updatedUserOptional.isPresent()) {
+            User user = updatedUserOptional.get();
+            User updatedUser = UserUpdater.updateFieldsOfUser(user, request);
+            userStorage.updateUser(updatedUser);
+            return updatedUser;
+        } else {
+            throw new ElementNotFoundException("User not found");
+        }
     }
 
-    public UserDto getUserById(Long id) {
+    public User getUserById(Long id) {
         return userStorage.getUserById(id)
-                .map(UserMapper::mapUserToDto)
                 .orElseThrow(() -> new ElementNotFoundException("User not found"));
     }
 
@@ -56,15 +51,11 @@ public class UserService {
         userStorage.removeUserFromFriends(userId, friendId);
     }
 
-    public List<UserDto> getAllFriends(Long id) {
-        return userStorage.getAllFriends(id).stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public List<User> getAllFriends(Long id) {
+        return userStorage.getAllFriends(id);
     }
 
-    public List<UserDto> getCommonFriends(Long userId, Long otherUserId) {
-        return userStorage.getCommonFriends(userId, otherUserId).stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public List<User> getCommonFriends(Long userId, Long otherUserId) {
+        return userStorage.getCommonFriends(userId, otherUserId);
     }
 }

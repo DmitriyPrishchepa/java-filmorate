@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -18,7 +17,7 @@ public class FilmRowMapper implements RowMapper<Film> {
         Date filmReleaseDate = rs.getDate("release_date");
 
         return Film.builder()
-                .id(rs.getLong("id"))
+                .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .releaseDate(filmReleaseDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())

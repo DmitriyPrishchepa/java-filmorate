@@ -8,13 +8,14 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
 @Builder
 public class Film {
     @Min(1L)
-    private Long id;
+    private Integer id;
     @NotBlank
     private String name;
     @Size(max = 200)
@@ -24,5 +25,5 @@ public class Film {
     private Integer duration;
     @Positive
     private Integer mpaId;
-    private Set<Long> genres;
+    private final Set<Integer> genres = new LinkedHashSet<>();
 }

@@ -2,8 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dto.dtos.UserDto;
-import ru.yandex.practicum.filmorate.mapper.UserMapper;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.friendship.FriendShipDbStorage;
 import ru.yandex.practicum.filmorate.storage.friendship.FriendShipStorage;
 
@@ -19,21 +18,15 @@ public class FriendShipService {
         this.friendShipStorage = friendShipStorage;
     }
 
-    public List<UserDto> sendFriendShipRequest(Long user_id, Long friend_id) {
-        return friendShipStorage.sendFriendShipRequest(user_id, friend_id).stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public List<User> sendFriendShipRequest(Long user_id, Long friend_id) {
+        return friendShipStorage.sendFriendShipRequest(user_id, friend_id);
     }
 
-    public List<UserDto> approveFriendShipRequest(Long user_id, Long friend_id) {
-        return friendShipStorage.approveFriendShipRequest(user_id, friend_id).stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public List<User> approveFriendShipRequest(Long user_id, Long friend_id) {
+        return friendShipStorage.approveFriendShipRequest(user_id, friend_id);
     }
 
-    public List<UserDto> refuseFriendShipRequest(Long user_id, Long friend_id) {
-        return friendShipStorage.refuseFriendShipRequest(user_id, friend_id).stream()
-                .map(UserMapper::mapUserToDto)
-                .toList();
+    public List<User> refuseFriendShipRequest(Long user_id, Long friend_id) {
+        return friendShipStorage.refuseFriendShipRequest(user_id, friend_id);
     }
 }

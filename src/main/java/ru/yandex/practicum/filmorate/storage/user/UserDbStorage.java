@@ -97,13 +97,6 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
-//    @Override
-//    public Collection<User> addUserToFriends(Long userId, Long friendId) {
-//        insert(ADD_TO_FRIENDS_REQUEST_QUERY, userId, friendId);
-//
-//        return getAllFriends(userId);
-//    }
-
     @Override
     public void removeUserFromFriends(Long id, Long friendId) {
         update(REMOVE_FROM_FRIEND, id, friendId);

@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dto.dtos.FilmDto;
-import ru.yandex.practicum.filmorate.dto.requests.films_requests.NewFilmRequest;
-import ru.yandex.practicum.filmorate.dto.requests.films_requests.UpdateFilmRequest;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
@@ -31,25 +29,25 @@ public class FilmController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<FilmDto> findAllFilms(@RequestParam(value = "genresIds", required = false) Set<Long> genresIds,
-                                            @RequestParam(value = "mpaId", required = false) Long mpaId) {
+    public Collection<Film> findAllFilms(@RequestParam(value = "genresIds", required = false) Set<Integer> genresIds,
+                                         @RequestParam(value = "mpaId", required = false) Integer mpaId) {
         return filmService.getAllFilms(genresIds, mpaId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FilmDto addFilm(@Valid @RequestBody NewFilmRequest film) {
+    public Film addFilm(@Valid @RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
     @PutMapping("/{id}")
-    public FilmDto updateFilm(@PathVariable("id") long id,
-                              @Valid @RequestBody UpdateFilmRequest film) {
+    public Film updateFilm(@PathVariable("id") long id,
+                           @Valid @RequestBody Film film) {
         return filmService.updateFilm(id, film);
     }
 
     @GetMapping("/{id}")
-    public FilmDto getFilmById(@Valid @PathVariable("id") @Positive Long id) {
+    public Film getFilmById(@Valid @PathVariable("id") @Positive Long id) {
         return filmService.getFilmById(id);
     }
 
@@ -65,7 +63,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<FilmDto> getPopularFilms(@Positive @RequestParam(required = false) Integer count) {
+    public List<Film> getPopularFilms(@Positive @RequestParam(required = false) Integer count) {
         return filmService.getPopularFilms(count);
     }
 }

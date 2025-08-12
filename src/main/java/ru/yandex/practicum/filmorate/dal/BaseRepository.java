@@ -42,7 +42,7 @@ public class BaseRepository<T> {
         }
     }
 
-    protected long insert(String query, Object... params) {
+    protected int insert(String query, Object... params) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
             PreparedStatement ps =
@@ -54,7 +54,7 @@ public class BaseRepository<T> {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKeyAs(Long.class);
+        Integer id = keyHolder.getKeyAs(Integer.class);
 
         if (id != null) {
             return id;

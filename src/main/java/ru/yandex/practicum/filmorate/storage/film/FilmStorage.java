@@ -11,7 +11,7 @@ import java.util.Set;
 @Component
 public interface FilmStorage {
 
-    Collection<Film> getAllFilms(Set<Long> genresIds, Long mpaId);
+    Collection<Film> getAllFilms(Set<Integer> genresIds, Integer mpaId);
 
     Film addFilm(Film film);
 
