@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -18,4 +22,5 @@ public class User {
     private String name;
     @PastOrPresent
     private LocalDate birthday;
+    private final Set<Integer> friends = new LinkedHashSet<>();
 }

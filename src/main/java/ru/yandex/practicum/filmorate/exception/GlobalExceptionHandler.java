@@ -71,5 +71,19 @@ public class GlobalExceptionHandler {
         log.error("Conditions not met");
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncorrectMpa(IncorrectAmountOfMpa e) {
+        log.error("Incorrect mpa amount");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDuplicate(DuplicateException e) {
+        log.error("Duplicate");
+        return new ErrorResponse(e.getMessage());
+    }
 }
 

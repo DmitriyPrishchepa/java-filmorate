@@ -12,8 +12,8 @@ public class FriendShipRowMapper implements RowMapper<FriendShip> {
     @Override
     public FriendShip mapRow(ResultSet rs, int rowNum) throws SQLException {
         return FriendShip.builder()
-                .userId(rs.getLong("user_id"))
-                .friendId(rs.getLong("friend_id"))
+                .userId(rs.getInt("user_id"))
+                .friendId(rs.getInt("friend_id"))
                 .status(rs.getString("status"))
                 .build();
     }

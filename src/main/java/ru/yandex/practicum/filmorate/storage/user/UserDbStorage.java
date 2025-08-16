@@ -3,10 +3,10 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
@@ -33,6 +33,9 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     "FROM friendship AS f " +
                     "JOIN users AS u ON f.friend_id = u.id " +
                     "WHERE f.user_id = ? AND f.status = true";
+
+    private static final String ADD_TO_FRIENDS_QUERY =
+            "INSERT INTO friendship(user_id, friend_id) VALUES (?, ?)";
 
     private static final String REMOVE_FROM_FRIEND =
             "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?";
@@ -112,17 +115,29 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
+    public void addFriend(Integer userId, Integer friendId) {
+        insert(ADD_TO_FRIENDS_QUERY, userId, friendId);
+    }
+
+    @Override
     public void removeUserFromFriends(Long id, Long friendId) {
         update(REMOVE_FROM_FRIEND, id, friendId);
     }
 
     @Override
-    public List<User> getAllFriends(Long id) {
+    public List<User> getAllFriends(Integer id) {
         return findMany(GET_FRIENDS_OF_USER, id);
     }
 
     @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
         return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
+    }
+
+    @Override
+    public boolean existsById(int userId) {
+        String sql = "SELECT COUNT(*) > 0 FROM users WHERE id = ?";
+        Integer count = jdbc.queryForObject(sql, Integer.class, userId);
+        return count > 0;
     }
 }

@@ -25,7 +25,7 @@ public class MpaDbStorage extends BaseRepository<Mpa> implements MpaStorage {
     }
 
     @Override
-    public Optional<Mpa> getRatingById(Long id) {
+    public Optional<Mpa> getRatingById(Integer id) {
         return findOne(GET_RATING_BY_ID, id);
     }
 }

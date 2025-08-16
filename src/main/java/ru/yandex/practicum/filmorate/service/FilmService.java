@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.util.FilmUpdater;
 import ru.yandex.practicum.filmorate.validation.FilmValidator;
@@ -12,13 +14,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final MpaService mpaService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, MpaService mpaService) {
         this.filmStorage = filmStorage;
+        this.mpaService = mpaService;
     }
 
     public Collection<Film> getAllFilms() {
@@ -26,6 +31,8 @@ public class FilmService {
     }
 
     public Film addFilm(Film request) {
+        Mpa mpa = mpaService.getMpaById(request.getMpaId());
+        request.setMpaId(mpa.getId());
         return filmStorage.addFilm(request);
     }
 

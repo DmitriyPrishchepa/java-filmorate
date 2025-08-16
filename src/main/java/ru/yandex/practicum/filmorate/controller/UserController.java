@@ -59,12 +59,20 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllFriends(@PathVariable("id") @Positive Long id) {
+    public List<User> getAllFriends(@PathVariable("id") @Positive Integer id) {
         return userService.getAllFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable("id") @Positive Long id, @Positive @PathVariable("otherId") Long otherId) {
         return userService.getCommonFriends(id, otherId);
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(
+            @PathVariable("userId") Integer userId,
+            @PathVariable("friendId") Integer friendId
+    ) {
+        userService.addFriend(userId, friendId);
     }
 }

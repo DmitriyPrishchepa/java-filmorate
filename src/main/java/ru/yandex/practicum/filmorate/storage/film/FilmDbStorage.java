@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     private GenreStorage genreStorage;
@@ -59,6 +61,8 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
+
+        log.debug("film {}", film);
 
         Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(film);
 

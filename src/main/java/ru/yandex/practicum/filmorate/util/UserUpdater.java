@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.util;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.LinkedHashSet;
+
 @Component
 public class UserUpdater {
 
@@ -22,6 +24,11 @@ public class UserUpdater {
         if (request.getBirthday() != null) {
             user.setBirthday(request.getBirthday());
         }
+
+        if (request.getFriends() != null) {
+            user.getFriends().addAll(new LinkedHashSet<>(request.getFriends()));
+        }
+
         return user;
     }
 }

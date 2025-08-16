@@ -22,7 +22,7 @@ public class MpaService {
         return mpaStorage.getRatings();
     }
 
-    public Mpa getMpaById(Long id) {
+    public Mpa getMpaById(Integer id) {
         return mpaStorage.getRatingById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Mpa not found"));
     }
