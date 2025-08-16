@@ -35,7 +35,7 @@ public class GenresDbStorage extends BaseRepository<Genre> implements GenreStora
     }
 
     @Override
-    public List<Genre> getGenresByFilmId(Long filmId) {
+    public List<Genre> getGenresByFilmId(Integer filmId) {
         return findMany(GET_GENRES_OF_FILM_QUERY, filmId);
     }
 }

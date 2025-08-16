@@ -11,13 +11,13 @@ import java.util.Set;
 @Component
 public interface FilmStorage {
 
-    Collection<Film> getAllFilms(Set<Integer> genresIds, Integer mpaId);
+    Collection<Film> getAllFilms();
 
     Film addFilm(Film film);
 
     Film updateFilm(Film film);
 
-    Optional<Film> getFilmById(Long id);
+    Optional<Film> getFilmById(Integer id);
 
     void likeFilm(Long id, Long userId);
 

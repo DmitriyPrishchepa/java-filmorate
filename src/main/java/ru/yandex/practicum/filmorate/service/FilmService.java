@@ -6,11 +6,10 @@ import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundExceptio
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.util.FilmUpdater;
+import ru.yandex.practicum.filmorate.validation.FilmValidator;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class FilmService {
@@ -22,28 +21,22 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    public Collection<Film> getAllFilms(Set<Integer> genresIds, Integer mpaId) {
-        return filmStorage.getAllFilms(genresIds, mpaId);
+    public Collection<Film> getAllFilms() {
+        return filmStorage.getAllFilms();
     }
 
     public Film addFilm(Film request) {
         return filmStorage.addFilm(request);
     }
 
-    public Film updateFilm(long filmId, Film request) {
-        Optional<Film> updatedFilmOptional = filmStorage.getFilmById(filmId);
-
-        if (updatedFilmOptional.isPresent()) {
-            Film film = updatedFilmOptional.get();
-            Film updatedFilm = FilmUpdater.updateFieldsOfFilm(film, request);
-            filmStorage.updateFilm(updatedFilm);
-            return updatedFilm;
-        } else {
-            throw new ElementNotFoundException("Film not found");
-        }
+    public Film updateFilm(Film request) {
+        Film existingFilm = getFilmById(request.getId());
+        Film validatedFilm = FilmValidator.validateFilm(existingFilm);
+        Film updatedFilm = FilmUpdater.updateFieldsOfFilm(existingFilm, validatedFilm);
+        return filmStorage.updateFilm(updatedFilm);
     }
 
-    public Film getFilmById(Long id) {
+    public Film getFilmById(Integer id) {
         return filmStorage.getFilmById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Film not found"));
     }

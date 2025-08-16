@@ -12,5 +12,5 @@ public interface GenreStorage {
 
     Optional<Genre> getGenreById(long id);
 
-    List<Genre> getGenresByFilmId(Long filmId);
+    List<Genre> getGenresByFilmId(Integer filmId);
 }

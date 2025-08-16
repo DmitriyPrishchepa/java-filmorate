@@ -15,7 +15,7 @@ public interface UserStorage {
 
     User updateUser(User user);
 
-    Optional<User> getUserById(Long id);
+    Optional<User> getUserById(Integer id);
 
     void removeUserFromFriends(Long id, Long friendId);
 

@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.User;
@@ -20,7 +22,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
     private static final String INSERT_QUERY =
             "INSERT INTO users(name, email, login, birthday) " +
-                    "VALUES (?, ?, ?, ?) returning id";
+                    "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_QUERY =
             "UPDATE users SET " +
                     "name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
@@ -55,7 +57,8 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
         Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
 
         try {
-            long id = insert(
+
+            Integer id = insert(
                     INSERT_QUERY,
                     user.getName(),
                     user.getEmail(),
@@ -64,6 +67,12 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
             );
 
             user.setId(id);
+
+            if (user.getName().isBlank()) {
+                user.setName(user.getLogin());
+            }
+
+            return user;
         } catch (RuntimeException e) {
             e.getStackTrace();
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -74,7 +83,6 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-
         Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
 
         try {
@@ -85,15 +93,21 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     user.getLogin(),
                     timestamp
             );
+
+            if (user.getName().isBlank()) {
+                user.setName(user.getLogin());
+            }
+
         } catch (RuntimeException e) {
             e.getStackTrace();
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
+
         return user;
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(Integer id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 

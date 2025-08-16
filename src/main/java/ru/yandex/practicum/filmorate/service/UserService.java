@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.util.UserUpdater;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,20 +28,13 @@ public class UserService {
         return userStorage.addUser(request);
     }
 
-    public User updateUser(long userId, User request) throws ElementNotFoundException {
-        Optional<User> updatedUserOptional = userStorage.getUserById(userId);
-
-        if (updatedUserOptional.isPresent()) {
-            User user = updatedUserOptional.get();
-            User updatedUser = UserUpdater.updateFieldsOfUser(user, request);
-            userStorage.updateUser(updatedUser);
-            return updatedUser;
-        } else {
-            throw new ElementNotFoundException("User not found");
-        }
+    public User updateUser(User request) {
+        User existingUser = getUserById(request.getId());
+        User updatedUser = UserUpdater.updateFieldsOfUser(existingUser, request);
+        return userStorage.updateUser(updatedUser);
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         return userStorage.getUserById(id)
                 .orElseThrow(() -> new ElementNotFoundException("User not found"));
     }

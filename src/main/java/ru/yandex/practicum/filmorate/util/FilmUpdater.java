@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.util;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.util.ArrayList;
+
 @Component
 public class FilmUpdater {
     public static Film updateFieldsOfFilm(Film film, Film request) {
@@ -27,7 +29,7 @@ public class FilmUpdater {
         }
 
         if (request.getGenres() != null) {
-            film.getGenres().addAll(request.getGenres());
+            film.setGenres(new ArrayList<>(request.getGenres()));
         }
 
         return film;

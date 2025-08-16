@@ -4,25 +4,28 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.genres.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.genres.GenresDbStorage;
 import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
+    private GenreStorage genreStorage;
+
     private static final String FIND_ALL_QUERY =
-            "SELECT * " +
-                    "FROM films AS f " +
-                    "JOIN film_genres AS fg ON f.id = fg.film_id " +
-                    "JOIN mpa AS m ON f.mpa_id = m.id " +
-                    "WHERE fg.genre_id = ? AND m.id = ?";
+            "SELECT * FROM films";
     ;
     private static final String INSERT_QUERY = "INSERT INTO films(name, description, release_date, duration, mpa_id) " +
             "VALUES (?, ?, ?, ?, ?)";
@@ -37,21 +40,21 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                     "GROUP BY film_id " +
                     "ORDER BY likes_count DESC " +
                     "LIMIT ?";
-    private static final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (%d, %d)";
+    private static final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
     private static final String UPDATE_GENRES_IDS = "UPDATE film_genres SET genre_id = ? WHERE film_id = ?";
 
-    public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> mapper) {
+    public FilmDbStorage(
+            JdbcTemplate jdbc,
+            RowMapper<Film> mapper,
+            GenresDbStorage genresDbStorage
+    ) {
         super(jdbc, mapper);
+        this.genreStorage = genresDbStorage;
     }
 
     @Override
-    public Collection<Film> getAllFilms(Set<Integer> genresIds, Integer mpaId) {
-        List<Film> films = new ArrayList<>();
-        for (Integer genreId : genresIds) {
-            films.addAll(findMany(FIND_ALL_QUERY, genreId, mpaId));
-        }
-
-        return films;
+    public Collection<Film> getAllFilms() {
+        return findMany(FIND_ALL_QUERY);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         try {
             Integer mpaId = film.getMpaId();
             if (mpaId == null) {
-                mpaId = 1; // Замените DEFAULT_MPA_ID на ваше дефолтное значение
+                mpaId = 1;
             }
 
             Integer id = insert(
@@ -75,10 +78,10 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
             );
 
             film.setId(id);
+            List<Genre> genres = genreStorage.getGenresByFilmId(id);
+            film.setGenres(genres);
 
-            if (film.getGenres() != null) {
-                batchUpdate(film);
-            }
+            batchUpdate(film);
 
             return film;
         } catch (
@@ -103,11 +106,8 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                     film.getMpaId()
             );
 
-            if (film.getGenres() != null) {
-                batchUpdate(film);
-            }
+            batchUpdate(film);
 
-            return film;
         } catch (
                 RuntimeException e) {
             e.getStackTrace();
@@ -118,7 +118,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getFilmById(Long id) {
+    public Optional<Film> getFilmById(Integer id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
@@ -137,25 +137,20 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         return findMany(GET_POPULAR_QUERY, count);
     }
 
-    public void batchUpdate(Film film) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        jdbc.batchUpdate(INSERT_INTO_FILM_GENRES, new BatchPreparedStatementSetter() {
+    public void batchUpdate(final Film film) {
+        jdbc.batchUpdate(
+                INSERT_INTO_FILM_GENRES,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setInt(1, film.getId());
+                        ps.setInt(2, film.getGenres().get(i).getId());
+                    }
 
-            final ArrayList<Integer> genres = new ArrayList<>(film.getGenres());
-
-            @Override
-            public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
-
-                preparedStatement.setLong(1, film.getId());
-                preparedStatement.setLong(2, genres.get(i));
-            }
-
-            @Override
-            public int getBatchSize() {
-                return genres.size();
-            }
-        });
-        stopWatch.stop();
+                    @Override
+                    public int getBatchSize() {
+                        return film.getGenres().size();
+                    }
+                });
     }
 }

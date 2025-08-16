@@ -22,7 +22,7 @@ public class GenreService {
         return genreStorage.getGenres();
     }
 
-    public Genre getGenreById(long id) {
+    public Genre getGenreById(Integer id) {
         return genreStorage.getGenreById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Genre not found"));
     }

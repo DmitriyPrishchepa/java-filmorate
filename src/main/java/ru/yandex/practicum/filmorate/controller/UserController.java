@@ -38,13 +38,14 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        return userService.updateUser(id, user);
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") @Positive Long id) {
+    public User getUserById(@PathVariable("id") @Positive Integer id) {
         return userService.getUserById(id);
     }
 

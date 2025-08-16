@@ -1,20 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
 public class Film {
-    @Min(1L)
     private Integer id;
     @NotBlank
     private String name;
@@ -24,6 +23,7 @@ public class Film {
     @Positive
     private Integer duration;
     @Positive
+    @NotNull
     private Integer mpaId;
-    private final Set<Integer> genres = new LinkedHashSet<>();
+    private List<Genre> genres;
 }

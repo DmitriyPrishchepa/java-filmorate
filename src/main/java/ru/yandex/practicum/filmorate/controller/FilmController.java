@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/films")
@@ -29,9 +28,8 @@ public class FilmController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Film> findAllFilms(@RequestParam(value = "genresIds", required = false) Set<Integer> genresIds,
-                                         @RequestParam(value = "mpaId", required = false) Integer mpaId) {
-        return filmService.getAllFilms(genresIds, mpaId);
+    public Collection<Film> findAllFilms() {
+        return filmService.getAllFilms();
     }
 
     @PostMapping
@@ -41,13 +39,12 @@ public class FilmController {
     }
 
     @PutMapping("/{id}")
-    public Film updateFilm(@PathVariable("id") long id,
-                           @Valid @RequestBody Film film) {
-        return filmService.updateFilm(id, film);
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        return filmService.updateFilm(film);
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@Valid @PathVariable("id") @Positive Long id) {
+    public Film getFilmById(@Valid @PathVariable("id") @Positive Integer id) {
         return filmService.getFilmById(id);
     }
 
