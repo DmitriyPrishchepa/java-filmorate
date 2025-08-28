@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -22,8 +21,6 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Integer duration;
-    @Positive
-    @NotNull
-    private Integer mpaId;
-    private List<Genre> genres;
+    private Mpa mpa;
+    private final List<Genre> genres = new ArrayList<>();
 }

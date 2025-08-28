@@ -85,5 +85,12 @@ public class GlobalExceptionHandler {
         log.error("Duplicate");
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidateFilm(ValidateFilmException e) {
+        log.error("Exception validate film");
+        return new ErrorResponse(e.getMessage());
+    }
 }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -28,17 +27,18 @@ public class FilmController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Film> findAllFilms() {
+    public List<Film> findAllFilms() {
         return filmService.getAllFilms();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film addFilm(@Valid @RequestBody Film film) {
+    public Film addFilm(@RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public Film updateFilm(@Valid @RequestBody Film film) {
         return filmService.updateFilm(film);
     }
@@ -48,9 +48,9 @@ public class FilmController {
         return filmService.getFilmById(id);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void likeFilm(@PathVariable @Positive Long id, @Positive @PathVariable Long userId) {
-        filmService.likeFilm(id, userId);
+    @PutMapping("/{filmId}/like/{userId}")
+    public void likeFilm(@PathVariable("filmId") Integer filmId, @PathVariable("userId") Integer userId) {
+        filmService.likeFilm(filmId, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -60,7 +60,8 @@ public class FilmController {
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> getPopularFilms(@Positive @RequestParam(required = false) Integer count) {
+    public List<Film> getPopularFilms(@RequestParam("count") Integer count) {
+        log.debug("count {}", count);
         return filmService.getPopularFilms(count);
     }
 }

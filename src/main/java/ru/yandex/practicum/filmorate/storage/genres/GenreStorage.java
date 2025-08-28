@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface GenreStorage {
     List<Genre> getGenres();
 
-    Optional<Genre> getGenreById(long id);
+    Optional<Genre> getGenreById(Integer id);
 
-    List<Genre> getGenresByFilmId(Integer filmId);
+    List<Genre> getGenresOfFilm(Integer id);
 }

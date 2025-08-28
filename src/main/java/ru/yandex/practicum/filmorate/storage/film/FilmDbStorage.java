@@ -7,16 +7,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.genres.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.genres.GenresDbStorage;
 import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,70 +20,43 @@ import java.util.Optional;
 @Slf4j
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
-    private GenreStorage genreStorage;
-
-    private static final String FIND_ALL_QUERY =
-            "SELECT * FROM films";
-    ;
-    private static final String INSERT_QUERY = "INSERT INTO films(name, description, release_date, duration, mpa_id) " +
-            "VALUES (?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE films SET " +
-            "name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE id = ?";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
-    private static final String LIKE_FILM_QUERY = "UPDATE likes SET like = 1 WHERE film_id = ? AND user_id = ?";
-    private static final String UNLIKE_FILM_QUERY = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
-    private static final String GET_POPULAR_QUERY =
-            "SELECT film_id, COUNT(like_id) AS likes_count " +
-                    "FROM likes " +
-                    "GROUP BY film_id " +
-                    "ORDER BY likes_count DESC " +
-                    "LIMIT ?";
-    private static final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-    private static final String UPDATE_GENRES_IDS = "UPDATE film_genres SET genre_id = ? WHERE film_id = ?";
-
     public FilmDbStorage(
             JdbcTemplate jdbc,
-            RowMapper<Film> mapper,
-            GenresDbStorage genresDbStorage
+            RowMapper<Film> mapper
     ) {
         super(jdbc, mapper);
-        this.genreStorage = genresDbStorage;
     }
 
     @Override
-    public Collection<Film> getAllFilms() {
+    public List<Film> getAllFilms() {
+        final String FIND_ALL_QUERY =
+                "SELECT * FROM films";
+        ;
         return findMany(FIND_ALL_QUERY);
     }
 
     @Override
     public Film addFilm(Film film) {
 
+        final String INSERT_QUERY = "INSERT INTO films(name, description, release_date, duration, mpa_id) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
         log.debug("film {}", film);
 
         Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(film);
 
         try {
-            Integer mpaId = film.getMpaId();
-            if (mpaId == null) {
-                mpaId = 1;
-            }
-
             Integer id = insert(
                     INSERT_QUERY,
                     film.getName(),
                     film.getDescription(),
                     timestamp,
                     film.getDuration(),
-                    mpaId
+                    film.getMpa().getId()
             );
 
             film.setId(id);
-            List<Genre> genres = genreStorage.getGenresByFilmId(id);
-            film.setGenres(genres);
-
             batchUpdate(film);
-
-            return film;
         } catch (
                 RuntimeException e) {
             e.getStackTrace();
@@ -100,6 +69,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
 
+        final String UPDATE_QUERY = "UPDATE films SET " +
+                "name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE id = ?";
+
         try {
             update(
                     UPDATE_QUERY,
@@ -107,10 +79,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                     film.getDescription(),
                     film.getReleaseDate(),
                     film.getDuration(),
-                    film.getMpaId()
+                    film.getMpa().getId()
             );
 
             batchUpdate(film);
+
+            return film;
 
         } catch (
                 RuntimeException e) {
@@ -123,25 +97,53 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(Integer id) {
+        final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
+        try {
+            return findOne(FIND_BY_ID_QUERY, id);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
     @Override
-    public void likeFilm(Long id, Long userId) {
-        update(LIKE_FILM_QUERY, id, userId);
+    public void likeFilm(Integer id, Integer userId) {
+        final String LIKE_FILM_QUERY = "INSERT INTO likes(film_id, user_id) VALUES (?, ?);";
+
+        try {
+            update(LIKE_FILM_QUERY, id, userId);
+        } catch (RuntimeException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
     }
 
     @Override
     public void unlikeFilm(Long id, Long userId) {
+        final String UNLIKE_FILM_QUERY = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
         update(UNLIKE_FILM_QUERY, id, userId);
     }
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
+        final String GET_POPULAR_QUERY =
+                "SELECT f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id " +
+                        "FROM films f " +
+                        "JOIN likes l ON f.id = l.film_id " +
+                        "GROUP BY f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id " +
+                        "ORDER BY COUNT(l.user_id) DESC " +
+                        "LIMIT ?";
+        try {
+            return findMany(GET_POPULAR_QUERY, count);
+        } catch (RuntimeException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
         return findMany(GET_POPULAR_QUERY, count);
     }
 
     public void batchUpdate(final Film film) {
+        final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
         jdbc.batchUpdate(
                 INSERT_INTO_FILM_GENRES,
                 new BatchPreparedStatementSetter() {

@@ -2,8 +2,7 @@ package ru.yandex.practicum.filmorate.util;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-
-import java.util.ArrayList;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 @Component
 public class FilmUpdater {
@@ -24,12 +23,17 @@ public class FilmUpdater {
             film.setDuration(request.getDuration());
         }
 
-        if (request.getMpaId() != null) {
-            film.setMpaId(request.getMpaId());
+        if (request.getMpa().getId() != null) {
+            film.setMpa(
+                    Mpa.builder()
+                            .id(request.getMpa().getId())
+                            .name(request.getMpa().getName())
+                            .build());
         }
 
         if (request.getGenres() != null) {
-            film.setGenres(new ArrayList<>(request.getGenres()));
+            film.getGenres().clear();
+            request.getGenres().addAll(request.getGenres());
         }
 
         return film;

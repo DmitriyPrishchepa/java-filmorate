@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -49,30 +50,33 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/{userId}/friends")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> friendGet(@PathVariable("userId") Integer userId) {
+        return userService.friendGet(userId);
+    }
+
     @DeleteMapping("/{userId}/friends/{friendId}")
     public void removeUserFromFriends(
-            @PathVariable @Positive Long userId,
-            @PathVariable @Positive Long friendId
+            @PathVariable Integer userId,
+            @PathVariable Integer friendId
     ) {
         userService.removeUserFromFriends(userId, friendId);
     }
 
-    @GetMapping("/{id}/friends")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllFriends(@PathVariable("id") @Positive Integer id) {
-        return userService.getAllFriends(id);
-    }
-
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable("id") @Positive Long id, @Positive @PathVariable("otherId") Long otherId) {
-        return userService.getCommonFriends(id, otherId);
+    @GetMapping("/{userId}/friends/common/{otherUserId}")
+    public List<User> getCommonFriends(
+            @PathVariable("userId") Integer userId,
+            @PathVariable("otherUserId") Integer otherUserId) {
+        return userService.getCommonFriends(userId, otherUserId);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public void addFriend(
+    @ResponseStatus(HttpStatus.OK)
+    public FriendShip addFriend(
             @PathVariable("userId") Integer userId,
             @PathVariable("friendId") Integer friendId
     ) {
-        userService.addFriend(userId, friendId);
+        return userService.addFriend(userId, friendId);
     }
 }
