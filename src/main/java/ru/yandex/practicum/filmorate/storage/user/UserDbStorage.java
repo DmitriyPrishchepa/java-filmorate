@@ -98,11 +98,15 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
+
+        log.debug("userId {}", userId);
+        log.debug("friendId {}", friendId);
+
         final String ADD_TO_FRIENDS_QUERY =
-                "INSERT INTO friendship(user_id, friend_id, status) VALUES(?, ?, ?)";
+                "INSERT INTO friendship(user_id, friend_id) VALUES(?, ?)";
 
         try {
-            insert(ADD_TO_FRIENDS_QUERY, userId, friendId, "Пользователь добавлен в друзья");
+            insert(ADD_TO_FRIENDS_QUERY, userId, friendId);
         } catch (RuntimeException e) {
             e.getStackTrace();
             System.out.println(Arrays.toString(e.getStackTrace()));

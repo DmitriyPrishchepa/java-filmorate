@@ -65,7 +65,6 @@ public class UserService {
         return FriendShip.builder()
                 .user(user)
                 .friend(friend)
-                .status("Пользователь " + friend.getName() + " у добавлен в друзья")
                 .build();
     }
 
@@ -79,7 +78,7 @@ public class UserService {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
-        if (!user.getFriends().remove(friend.getId())) {
+        if (!user.getFriends().remove(friend)) {
             log.debug("Дружба не найдена");
             return;
         }

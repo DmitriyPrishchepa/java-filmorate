@@ -7,9 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS friendship (
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    friend_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    status varchar(50)
+    user_id INTEGER REFERENCES users(id) NOT NULL,
+    friend_id INTEGER REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films (
