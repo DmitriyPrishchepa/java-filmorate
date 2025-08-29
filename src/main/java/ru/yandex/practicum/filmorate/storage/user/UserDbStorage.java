@@ -98,15 +98,9 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
-
-        log.debug("userId {}", userId);
-        log.debug("friendId {}", friendId);
-
-        final String ADD_TO_FRIENDS_QUERY =
-                "INSERT INTO friendship(user_id, friend_id) VALUES(?, ?)";
-
         try {
-            insert(ADD_TO_FRIENDS_QUERY, userId, friendId);
+            String sqlQuery = "INSERT INTO friendship(user_id, friend_id) VALUES(?, ?)";
+            update(sqlQuery, userId, friendId);
         } catch (RuntimeException e) {
             e.getStackTrace();
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -134,9 +128,10 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     @Override
     public List<User> friendGet(Integer userId) {
         final String FRIEND_GET =
-                "SELECT friend_id " +
-                        "FROM friendship " +
-                        "WHERE user_id = ?";
+                "SELECT * FROM users AS u" +
+                        "JOIN friendship AS f " +
+                        "ON u.id = f.friend_id " +
+                        "WHERE u.user_id = ?";
         try {
             return findMany(FRIEND_GET, userId);
         } catch (RuntimeException e) {

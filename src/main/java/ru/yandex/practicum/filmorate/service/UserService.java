@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.exeptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.exeptions.DuplicateException;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.FriendShip;
@@ -61,6 +62,10 @@ public class UserService {
         userStorage.addFriend(userId, friendId);
 
         user.getFriends().add(friend);
+
+        User user1 = getUserById(user.getId());
+
+        log.debug("user {}", user1);
 
         return FriendShip.builder()
                 .user(user)

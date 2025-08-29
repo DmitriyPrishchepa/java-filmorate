@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS friendship (
-    user_id INTEGER REFERENCES users(id) NOT NULL,
-    friend_id INTEGER REFERENCES users(id) NOT NULL
+    user_id INTEGER REFERENCES users(id),
+    friend_id INTEGER REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS films (
