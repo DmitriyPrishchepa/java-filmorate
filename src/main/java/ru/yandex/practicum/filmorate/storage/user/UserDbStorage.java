@@ -5,15 +5,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 @Slf4j
@@ -76,7 +74,8 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     user.getName(),
                     user.getEmail(),
                     user.getLogin(),
-                    timestamp
+                    timestamp,
+                    user.getId()
             );
 
             if (user.getName().isBlank()) {
@@ -92,65 +91,9 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUserById(Integer id) {
+    public User getUserById(Integer id) {
         final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-        return findOne(FIND_BY_ID_QUERY, id);
-    }
-
-    @Override
-    public void addFriend(Integer userId, Integer friendId) {
-        try {
-            String sqlQuery = "INSERT INTO friendship(user_id, friend_id) VALUES(?, ?)";
-            update(sqlQuery, userId, friendId);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            System.out.println(Arrays.toString(e.getStackTrace()));
-        }
-    }
-
-    @Override
-    public void removeUserFromFriends(Integer id, Integer friendId) {
-        final String REMOVE_FROM_FRIEND =
-                "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?";
-        update(REMOVE_FROM_FRIEND, id, friendId);
-    }
-
-    @Override
-    public List<User> getCommonFriends(Integer userId, Integer otherUserId) {
-
-        log.debug("userId {}", userId);
-        log.debug("friendId {}", otherUserId);
-
-        final String GET_COMMON_FRIENDS =
-                "SELECT f1.friend_id " +
-                        "FROM friendship f1 " +
-                        "JOIN friendship f2 " +
-                        "ON f1.friend_id = f2.friend_id " +
-                        "WHERE f1.user_id = ? " +
-                        "AND f2.user_id = ?;";
-        try {
-            return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-        }
-
-        return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
-    }
-
-    @Override
-    public List<User> friendGet(Integer userId) {
-        final String FRIEND_GET =
-                "SELECT * FROM users u " +
-                        "JOIN friendship f " +
-                        "ON u.id = f.friend_id " +
-                        "WHERE u.id = ?";
-        try {
-            return findMany(FRIEND_GET, userId);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            System.out.println(Arrays.toString(e.getStackTrace()));
-        }
-
-        return findMany(FRIEND_GET, userId);
+        return findOne(FIND_BY_ID_QUERY, id)
+                .orElseThrow(() -> new ElementNotFoundException("User not found"));
     }
 }

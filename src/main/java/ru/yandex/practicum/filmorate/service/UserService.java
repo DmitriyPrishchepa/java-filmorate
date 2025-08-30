@@ -3,10 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.exeptions.DuplicateException;
-import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.friendship.FriendShipStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.util.UserUpdater;
 
@@ -18,10 +16,12 @@ import java.util.List;
 public class UserService {
 
     private final UserStorage userStorage;
+    private FriendShipStorage friendShipStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendShipStorage friendShipStorage) {
         this.userStorage = userStorage;
+        this.friendShipStorage = friendShipStorage;
     }
 
     public Collection<User> getAllUsers() {
@@ -39,70 +39,16 @@ public class UserService {
     }
 
     public User getUserById(Integer id) {
-        List<User> friends = userStorage.friendGet(id);
-
-        return userStorage.getUserById(id)
-                .map(user -> {
-                    user.getFriends().addAll(friends);
-                    return user;
+        List<User> friends = friendShipStorage.friendGet(id)
+                .stream()
+                .map(friendShip -> {
+                    return userStorage.getUserById(id);
                 })
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
-    }
+                .toList();
 
-    public FriendShip addFriend(Integer userId, Integer friendId) {
-
-        if (userId.equals(friendId)) {
-            log.debug("Пользователь {} пытается добавить самого себя в друзья", userId);
-            throw new DuplicateException("Нельзя добавить самого себя в друзья");
-        }
-
-        User user = getUserById(userId);
-        User friend = getUserById(friendId);
-
-        if (user.getFriends().contains(friend)) {
-            log.debug("Пользователь {} пытается добавить {} в друзья дважды", userId, friendId);
-            throw new DuplicateException("Нельзя добавить в друзья дважды");
-        }
-
-        userStorage.addFriend(userId, friendId);
-
-        user.getFriends().add(friend);
-
-        User user1 = getUserById(user.getId());
-
-        log.debug("user {}", user1);
-
-        return FriendShip.builder()
-                .user(user)
-                .friend(friend)
-                .build();
-    }
-
-
-    public void removeUserFromFriends(Integer userId, Integer friendId) {
-        if (userId.equals(friendId)) {
-            log.debug("Пользователь {} пытается удалить самого себя из друзей", userId);
-            throw new DuplicateException("Нельзя удалить самого себя из друзей");
-        }
-
-        User user = getUserById(userId);
-        User friend = getUserById(friendId);
-
-        if (!user.getFriends().remove(friend)) {
-            log.debug("Дружба не найдена");
-            return;
-        }
-
-        userStorage.removeUserFromFriends(userId, friendId);
-    }
-
-    public List<User> getCommonFriends(Integer userId, Integer otherUserId) {
-        return userStorage.getCommonFriends(userId, otherUserId);
-    }
-
-    public List<User> friendGet(Integer userId) {
-        User user = getUserById(userId);
-        return userStorage.friendGet(user.getId());
+        User user = userStorage.getUserById(id);
+        user.getFriends().addAll(friends);
+        return user;
     }
 }
 
