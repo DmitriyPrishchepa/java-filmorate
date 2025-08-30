@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.FriendShip;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -19,13 +18,8 @@ public class FriendShipDbStorage extends BaseRepository<FriendShip> implements F
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
-        try {
-            String sqlQuery = "INSERT INTO friendship(user_id, friend_id) VALUES(?, ?)";
-            update(sqlQuery, userId, friendId);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            System.out.println(Arrays.toString(e.getStackTrace()));
-        }
+        String sqlQuery = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
+        update(sqlQuery, userId, friendId);
     }
 
     @Override

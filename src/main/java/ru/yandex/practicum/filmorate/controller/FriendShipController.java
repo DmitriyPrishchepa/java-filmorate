@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FriendShipService;
 
@@ -26,11 +25,11 @@ public class FriendShipController {
 
     @PutMapping("/{userId}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public FriendShip addFriend(
+    public void addFriend(
             @PathVariable("userId") Integer userId,
             @PathVariable("friendId") Integer friendId
     ) {
-        return friendShipService.addFriend(userId, friendId);
+        friendShipService.addFriend(userId, friendId);
     }
 
     @GetMapping("/{userId}/friends")

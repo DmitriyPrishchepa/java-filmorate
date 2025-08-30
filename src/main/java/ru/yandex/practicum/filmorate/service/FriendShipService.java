@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.exeptions.DuplicateException;
-import ru.yandex.practicum.filmorate.model.FriendShip;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.friendship.FriendShipStorage;
 
@@ -14,8 +13,8 @@ import java.util.List;
 @Slf4j
 public class FriendShipService {
 
-    private FriendShipStorage friendShipStorage;
-    private UserService userService;
+    private final FriendShipStorage friendShipStorage;
+    private final UserService userService;
 
     @Autowired
     public FriendShipService(FriendShipStorage friendShipStorage, UserService userService) {
@@ -23,19 +22,12 @@ public class FriendShipService {
         this.userService = userService;
     }
 
-    public FriendShip addFriend(Integer userId, Integer friendId) {
+    public void addFriend(Integer userId, Integer friendId) {
 
-        User user = userService.getUserById(userId);
-        User friend = userService.getUserById(friendId);
+        userService.getUserById(userId);
+        userService.getUserById(friendId);
 
         friendShipStorage.addFriend(userId, friendId);
-
-        user.getFriends().add(friend);
-
-        return FriendShip.builder()
-                .userId(user.getId())
-                .friendId(friend.getId())
-                .build();
     }
 
 

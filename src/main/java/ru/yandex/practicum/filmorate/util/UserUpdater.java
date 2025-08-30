@@ -25,10 +25,6 @@ public class UserUpdater {
             user.setBirthday(request.getBirthday());
         }
 
-        if (request.getFriends() != null) {
-            user.getFriends().addAll(new LinkedHashSet<>(request.getFriends()));
-        }
-
         return user;
     }
 }
