@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
@@ -116,22 +117,33 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public List<User> getCommonFriends(Integer userId, Integer otherUserId) {
+
+        log.debug("userId {}", userId);
+        log.debug("friendId {}", otherUserId);
+
         final String GET_COMMON_FRIENDS =
                 "SELECT f1.friend_id " +
-                        "FROM friendship as f1 " +
-                        "JOIN friendship as f2 ON f1.friend_id = f2.friend_id " +
+                        "FROM friendship f1 " +
+                        "JOIN friendship f2 " +
+                        "ON f1.friend_id = f2.friend_id " +
                         "WHERE f1.user_id = ? " +
-                        "AND f2.user_id = ?";
+                        "AND f2.user_id = ?;";
+        try {
+            return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+        }
+
         return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
     }
 
     @Override
     public List<User> friendGet(Integer userId) {
         final String FRIEND_GET =
-                "SELECT * FROM users AS u" +
-                        "JOIN friendship AS f " +
+                "SELECT * FROM users u " +
+                        "JOIN friendship f " +
                         "ON u.id = f.friend_id " +
-                        "WHERE u.user_id = ?";
+                        "WHERE u.id = ?";
         try {
             return findMany(FRIEND_GET, userId);
         } catch (RuntimeException e) {
