@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     name varchar(100) NOT NULL,
     email varchar(100) NOT NULL,
     login varchar(100) NOT NULL,
-    birthday timestamp NOT NULL
+    birthday DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS friendship (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS films (
     id SERIAL PRIMARY KEY,
     name varchar(100) NOT NULL,
     description varchar(200) NOT NULL,
-    release_date timestamp NOT NULL,
+    release_date DATE NOT NULL,
     duration integer NOT NULL,
     mpa_id integer NOT NULL
 );

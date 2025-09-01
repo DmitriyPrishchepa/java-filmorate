@@ -32,38 +32,19 @@ public class FriendShipService {
 
 
     public void removeUserFromFriends(Integer userId, Integer friendId) {
+
         if (userId.equals(friendId)) {
             log.debug("Пользователь {} пытается удалить самого себя из друзей", userId);
             throw new DuplicateException("Нельзя удалить самого себя из друзей");
         }
 
-        User user = userService.getUserById(userId);
+        userService.getUserById(userId);
         User friend = userService.getUserById(friendId);
 
-        if (!user.getFriends().remove(friend)) {
-            log.debug("Дружба не найдена");
-            return;
+        List<User> friends = userService.friendGet(userId);
+
+        if (friends.contains(friend)) {
+            friendShipStorage.removeUserFromFriends(userId, friendId);
         }
-
-        friendShipStorage.removeUserFromFriends(userId, friendId);
-    }
-
-    public List<User> getCommonFriends(Integer userId, Integer otherUserId) {
-        return friendShipStorage.getCommonFriends(userId, otherUserId)
-                .stream()
-                .map(friendShip -> {
-                    return userService.getUserById(friendShip.getFriendId());
-                })
-                .toList();
-    }
-
-    public List<User> friendGet(Integer userId) {
-        User user = userService.getUserById(userId);
-        return friendShipStorage.friendGet(user.getId())
-                .stream()
-                .map(friendShip -> {
-                    return userService.getUserById(friendShip.getFriendId());
-                })
-                .toList();
     }
 }

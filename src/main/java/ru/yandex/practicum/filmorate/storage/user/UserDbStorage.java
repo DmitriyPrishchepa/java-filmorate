@@ -7,11 +7,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -33,8 +32,6 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                 "INSERT INTO users(name, email, login, birthday) " +
                         "VALUES (?, ?, ?, ?)";
 
-        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
-
         try {
 
             Integer id = insert(
@@ -42,7 +39,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                     user.getName(),
                     user.getEmail(),
                     user.getLogin(),
-                    timestamp
+                    user.getBirthday()
             );
 
             user.setId(id);
@@ -66,15 +63,13 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                 "UPDATE users SET " +
                         "name = ?, email = ?, login = ?, birthday = ? WHERE id = ?";
 
-        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(user);
-
         try {
             update(
                     UPDATE_QUERY,
                     user.getName(),
                     user.getEmail(),
                     user.getLogin(),
-                    timestamp,
+                    user.getBirthday(),
                     user.getId()
             );
 
@@ -95,5 +90,26 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
         final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
         return findOne(FIND_BY_ID_QUERY, id)
                 .orElseThrow(() -> new ElementNotFoundException("User not found"));
+    }
+
+    @Override
+    public List<User> getCommonFriends(Integer userId, Integer otherUserId) {
+
+        final String GET_COMMON_FRIENDS =
+                "SELECT * FROM users u " +
+                        "JOIN friendship f1 ON u.id = f1.friend_id " +
+                        "JOIN friendship f2 ON u.id = f2.friend_id " +
+                        "WHERE f1.user_id = ? AND f2.user_id = ?";
+        return findMany(GET_COMMON_FRIENDS, userId, otherUserId);
+    }
+
+    @Override
+    public List<User> friendGet(Integer userId) {
+        final String FRIEND_GET =
+                "SELECT * FROM users u " +
+                        "JOIN friendship f " +
+                        "ON u.id = f.friend_id " +
+                        "WHERE u.id = ?";
+        return findMany(FRIEND_GET, userId);
     }
 }

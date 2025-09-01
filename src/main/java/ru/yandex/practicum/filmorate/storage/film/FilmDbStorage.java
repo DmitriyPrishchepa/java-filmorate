@@ -7,11 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.util.LocalDateToTimeStamp;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -43,14 +41,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
         log.debug("film {}", film);
 
-        Timestamp timestamp = LocalDateToTimeStamp.localDateToTimeStamp(film);
-
         try {
             Integer id = insert(
                     INSERT_QUERY,
                     film.getName(),
                     film.getDescription(),
-                    timestamp,
+                    film.getReleaseDate(),
                     film.getDuration(),
                     film.getMpa().getId()
             );

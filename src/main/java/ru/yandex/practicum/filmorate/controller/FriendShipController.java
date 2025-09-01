@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FriendShipService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -32,24 +29,11 @@ public class FriendShipController {
         friendShipService.addFriend(userId, friendId);
     }
 
-    @GetMapping("/{userId}/friends")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> friendGet(@PathVariable("userId") Integer userId) {
-        return friendShipService.friendGet(userId);
-    }
-
     @DeleteMapping("/{userId}/friends/{friendId}")
     public void removeUserFromFriends(
             @PathVariable Integer userId,
             @PathVariable Integer friendId
     ) {
         friendShipService.removeUserFromFriends(userId, friendId);
-    }
-
-    @GetMapping("/{userId}/friends/common/{otherUserId}")
-    public List<User> getCommonFriends(
-            @PathVariable("userId") Integer userId,
-            @PathVariable("otherUserId") Integer otherUserId) {
-        return friendShipService.getCommonFriends(userId, otherUserId);
     }
 }
