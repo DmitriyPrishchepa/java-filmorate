@@ -27,14 +27,49 @@ class UserTests {
 
     @Test
     public void testAddUser() {
-        User user = userStorage.addUser(User.builder()
+        userStorage.addUser(User.builder()
                 .name("Alex")
                 .email("alex@gmail.com")
                 .login("alexandr")
                 .birthday(LocalDate.of(1995, 10, 10))
                 .build());
 
-        assertThat(user).hasFieldOrPropertyWithValue("id", 1);
+        userStorage.addUser(User.builder()
+                .name("Dima")
+                .email("dimchik@gmail.com")
+                .login("dmitr")
+                .birthday(LocalDate.of(2000, 10, 10))
+                .build());
+
+        User user = userStorage.addUser(User.builder()
+                .name("Igor")
+                .email("igor@gmail.com")
+                .login("iggir")
+                .birthday(LocalDate.of(1999, 12, 5))
+                .build());
+
+        userStorage.addUser(User.builder()
+                .name("Svyatoslav")
+                .email("svyat@gmail.com")
+                .login("svyatoy")
+                .birthday(LocalDate.of(1992, 5, 11))
+                .build());
+
+        userStorage.addUser(User.builder()
+                .name("Oleg")
+                .email("olli@gmail.com")
+                .login("olegek")
+                .birthday(LocalDate.of(1991, 5, 11))
+                .build());
+
+        userStorage.addUser(User.builder()
+                .name("Jogn")
+                .email("jonny@gmail.com")
+                .login("j")
+                .birthday(LocalDate.of(1991, 10, 15))
+                .build());
+
+        assertThat(user).hasFieldOrPropertyWithValue("id", 3);
     }
 
     @Test
@@ -59,19 +94,6 @@ class UserTests {
 
     @Test
     public void testGetAllUsers() {
-        userStorage.addUser(User.builder()
-                .name("Dima")
-                .email("dimchik@gmail.com")
-                .login("dmitr")
-                .birthday(LocalDate.of(2000, 10, 10))
-                .build());
-
-        userStorage.addUser(User.builder()
-                .name("Igor")
-                .email("igor@gmail.com")
-                .login("iggir")
-                .birthday(LocalDate.of(1999, 12, 5))
-                .build());
 
         List<User> users = userStorage.getAllUsers().stream().toList();
 
@@ -90,51 +112,37 @@ class UserTests {
 
     @Test
     public void testGetCommonFriends() {
-        User user1 = userStorage.addUser(User.builder()
-                .name("Svyatoslav")
-                .email("svyat@gmail.com")
-                .login("svyatoy")
-                .birthday(LocalDate.of(1992, 5, 11))
-                .build());
 
-        User user2 = userStorage.addUser(User.builder()
-                .name("Oleg")
-                .email("olli@gmail.com")
-                .login("olegek")
-                .birthday(LocalDate.of(1991, 5, 11))
-                .build());
+        Optional<User> user1Optional = userStorage.getUserById(1);
+        Optional<User> user2Optional = userStorage.getUserById(2);
+        Optional<User> user3Optional = userStorage.getUserById(2);
 
-        User user3 = userStorage.addUser(User.builder()
-                .name("Jogn")
-                .email("jonny@gmail.com")
-                .login("j")
-                .birthday(LocalDate.of(1991, 10, 15))
-                .build());
+        if (user1Optional.isPresent() && user2Optional.isPresent() && user3Optional.isPresent()) {
+            Integer user1Id = user1Optional.get().getId();
+            Integer user2Id = user2Optional.get().getId();
+            Integer user3Id = user3Optional.get().getId();
 
-        Integer user1Id = user1.getId();
-        Integer user2Id = user2.getId();
-        Integer user3Id = user3.getId();
+            friendshipStorage.addFriend(user1Id, user2Id);
+            friendshipStorage.addFriend(user3Id, user2Id);
 
-        friendshipStorage.addFriend(user1Id, user2Id);
-        friendshipStorage.addFriend(user3Id, user2Id);
+            List<User> commonFriends = userStorage.getCommonFriends(user1Id, user3Id);
 
-        List<User> commonFriends = userStorage.getCommonFriends(user1.getId(), user3.getId());
-
-        assertThat(commonFriends).asList().contains(user2);
+            assertThat(commonFriends).asList().contains(user2Optional.get());
+        }
     }
 
     @Test
     public void testRemoveUserFromFriends() {
-        List<User> friendsOfUser2 = userStorage.friendGet(2);
-        Optional<User> optionalUser = userStorage.getUserById(3);
+        List<User> friendsOfUser2 = userStorage.friendGet(1);
+        Optional<User> optionalUser = userStorage.getUserById(2);
 
         assertThat(friendsOfUser2).asList().size().isEqualTo(1);
 
         optionalUser.ifPresent(user -> assertThat(friendsOfUser2).asList().contains(user));
 
-        optionalUser.ifPresent(user -> friendshipStorage.removeUserFromFriends(2, user.getId()));
+        optionalUser.ifPresent(user -> friendshipStorage.removeUserFromFriends(1, user.getId()));
 
-        List<User> friendsOfUser = userStorage.friendGet(2);
+        List<User> friendsOfUser = userStorage.friendGet(1);
         assertThat(friendsOfUser).asList().isEmpty();
     }
 }

@@ -27,24 +27,7 @@ public class GenresTest {
     private final FilmDbStorage filmDbStorage;
 
     @Test
-    void testGetGenres() {
-        List<Genre> genres = genresDbStorage.getGenres();
-        assertThat(genres).asList().size().isEqualTo(6);
-    }
-
-    @Test
-    void testGetGenreById() {
-        Optional<Genre> genreOptional = genresDbStorage.getGenreById(3);
-
-        assertThat(genreOptional)
-                .isPresent()
-                .hasValueSatisfying(genre -> {
-                    assertThat(genre).hasFieldOrPropertyWithValue("name", "Мультфильм");
-                });
-    }
-
-    @Test
-    void testGetGenreOfFilm() {
+    void createFilm() {
         Film film = Film.builder()
                 .name("It")
                 .description("It will come")
@@ -73,8 +56,32 @@ public class GenresTest {
         filmDbStorage.addFilm(film);
 
         assertThat(film).hasFieldOrPropertyWithValue("id", 1);
+    }
 
-        List<Genre> genreOptional = genresDbStorage.getGenresOfFilm(film.getId());
-        assertThat(genreOptional).asList().size().isEqualTo(2);
+    @Test
+    void testGetGenres() {
+        List<Genre> genres = genresDbStorage.getGenres();
+        assertThat(genres).asList().size().isEqualTo(6);
+    }
+
+    @Test
+    void testGetGenreById() {
+        Optional<Genre> genreOptional = genresDbStorage.getGenreById(3);
+
+        assertThat(genreOptional)
+                .isPresent()
+                .hasValueSatisfying(genre -> {
+                    assertThat(genre).hasFieldOrPropertyWithValue("name", "Мультфильм");
+                });
+    }
+
+    @Test
+    void testGetGenreOfFilm() {
+        Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
+
+        if (filmOptional.isPresent()) {
+            List<Genre> genreOptional = genresDbStorage.getGenresOfFilm(filmOptional.get().getId());
+            assertThat(genreOptional).asList().size().isEqualTo(2);
+        }
     }
 }

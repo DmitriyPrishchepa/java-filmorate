@@ -11,10 +11,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.util.FilmUpdater;
 import ru.yandex.practicum.filmorate.validation.FilmValidator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -31,7 +28,7 @@ public class FilmService {
         this.genreService = genreService;
     }
 
-    public List<Film> getAllFilms() {
+    public Collection<Film> getAllFilms() {
         return filmStorage.getAllFilms();
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,7 @@ public class FilmController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> findAllFilms() {
+    public Collection<Film> findAllFilms() {
         return filmService.getAllFilms();
     }
 

@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     @Override
-    public List<Film> getAllFilms() {
+    public Collection<Film> getAllFilms() {
         final String FIND_ALL_QUERY =
                 "SELECT * FROM films";
         ;
@@ -143,6 +144,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     public Integer getLikesOfFilm(Integer filmId) {
         final String sql = "SELECT COUNT(user_id) FROM likes WHERE film_id = ?";
         return jdbc.queryForObject(sql, Integer.class, filmId);
+    }
+
+    @Override
+    public void removeAlFilms() {
+        final String sql = "DELETE FROM films";
+        jdbc.update(sql);
     }
 
     public void batchUpdate(final Film film) {

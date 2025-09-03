@@ -3,13 +3,14 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public interface FilmStorage {
 
-    List<Film> getAllFilms();
+    Collection<Film> getAllFilms();
 
     Film addFilm(Film film);
 
@@ -24,4 +25,6 @@ public interface FilmStorage {
     List<Film> getPopularFilms(Integer count);
 
     Integer getLikesOfFilm(Integer filmId);
+
+    void removeAlFilms();
 }
