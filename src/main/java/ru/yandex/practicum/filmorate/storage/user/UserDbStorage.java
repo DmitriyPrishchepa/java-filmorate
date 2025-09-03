@@ -111,4 +111,10 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                         "WHERE f.user_id = ?";
         return findMany(FRIEND_GET, userId);
     }
+
+    @Override
+    public void removeAllUsers() {
+        final String sql = "DELETE FROM users";
+        update(sql);
+    }
 }

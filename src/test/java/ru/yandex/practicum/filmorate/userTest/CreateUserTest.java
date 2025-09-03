@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.userTest;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -18,6 +20,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CreateUserTest {
 
     private final UserDbStorage userStorage;
+
+    @AfterEach
+    void cleanUsers() {
+        userStorage.removeAllUsers();
+    }
 
     @Test
     public void testAddUser() {
