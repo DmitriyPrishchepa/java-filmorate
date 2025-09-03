@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.mpaTest;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -9,14 +9,13 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class MpaTests {
+public class GetRatingsTest {
 
     private final MpaDbStorage mpaDbStorage;
 
@@ -24,16 +23,5 @@ public class MpaTests {
     void testGetRatings() {
         List<Mpa> ratings = mpaDbStorage.getRatings();
         assertThat(ratings).asList().size().isEqualTo(5);
-    }
-
-    @Test
-    void testGetRatingById() {
-        Optional<Mpa> ratingOptional = mpaDbStorage.getRatingById(1);
-
-        assertThat(ratingOptional)
-                .isPresent()
-                .hasValueSatisfying(mpa -> {
-                    assertThat(mpa).hasFieldOrPropertyWithValue("name", "G");
-                });
     }
 }

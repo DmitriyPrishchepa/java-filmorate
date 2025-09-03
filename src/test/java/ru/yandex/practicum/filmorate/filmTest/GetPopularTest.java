@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.filmTest;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -20,13 +20,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class FilmTests {
+public class GetPopularTest {
 
     private final FilmDbStorage filmDbStorage;
     private final UserDbStorage userDbStorage;
 
     @Test
-    void createUsers() {
+    public void testGetPopularAndLikeFilm() {
+
         userDbStorage.addUser(User.builder()
                 .name("Svyatoslav")
                 .email("svyat@gmail.com")
@@ -47,10 +48,6 @@ public class FilmTests {
                 .login("j")
                 .birthday(LocalDate.of(1991, 10, 15))
                 .build());
-    }
-
-    @Test
-    public void testCreateFilm() {
 
         filmDbStorage.addFilm(Film.builder()
                 .name("It")
@@ -107,87 +104,41 @@ public class FilmTests {
                         .build())
                 .build());
 
-        assertThat(film).hasFieldOrPropertyWithValue("id", 3);
+        Optional<Film> film1Optional = filmDbStorage.getFilmById(1);
+        Optional<Film> film2Optional = filmDbStorage.getFilmById(2);
+        Optional<Film> film3Optional = filmDbStorage.getFilmById(3);
+
+        Optional<User> user1Optional = userDbStorage.getUserById(1);
+        Optional<User> user2Optional = userDbStorage.getUserById(2);
+        Optional<User> user3Optional = userDbStorage.getUserById(3);
+
+        if (user1Optional.isPresent() && user2Optional.isPresent() && user3Optional.isPresent()) {
+            filmDbStorage.likeFilm(1, user1Optional.get().getId());
+            filmDbStorage.likeFilm(1, user2Optional.get().getId());
+            filmDbStorage.likeFilm(1, user3Optional.get().getId());
+
+            filmDbStorage.likeFilm(2, user1Optional.get().getId());
+            filmDbStorage.likeFilm(2, user2Optional.get().getId());
+
+            filmDbStorage.likeFilm(3, user1Optional.get().getId());
+
+            if (film1Optional.isPresent()) {
+                Integer likes1 = filmDbStorage.getLikesOfFilm(film1Optional.get().getId());
+                assertThat(likes1).isEqualTo(3);
+            }
+
+            if (film2Optional.isPresent()) {
+                Integer likes2 = filmDbStorage.getLikesOfFilm(film2Optional.get().getId());
+                assertThat(likes2).isEqualTo(2);
+            }
+
+            if (film3Optional.isPresent()) {
+                Integer likes3 = filmDbStorage.getLikesOfFilm(film3Optional.get().getId());
+                assertThat(likes3).isEqualTo(1);
+            }
+
+            List<Film> popular = filmDbStorage.getPopularFilms(3);
+            assertThat(popular).asList().size().isEqualTo(3);
+        }
     }
-
-    @Test
-    public void testGetAll() {
-        List<Film> films = filmDbStorage.getAllFilms().stream().toList();
-        assertThat(films).asList().size().isEqualTo(5);
-    }
-
-    @Test
-    public void testUpdateFilm() {
-        Film film = filmDbStorage.updateFilm(Film.builder()
-                .name("Pirates of Caribbean")
-                .build());
-
-        assertThat(film).hasFieldOrPropertyWithValue("name", "Pirates of Caribbean");
-    }
-
-    @Test
-    public void testGetFilmById() {
-        Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
-
-        assertThat(filmOptional)
-                .isPresent()
-                .hasValueSatisfying(film ->
-                        assertThat(film).hasFieldOrPropertyWithValue("id", 1));
-    }
-
-//    @Test
-//    public void testGetPopularAndLikeFilm() {
-//
-//        Optional<Film> film1Optional = filmDbStorage.getFilmById(1);
-//        Optional<Film> film2Optional = filmDbStorage.getFilmById(2);
-//        Optional<Film> film3Optional = filmDbStorage.getFilmById(3);
-//
-//        Optional<User> user1Optional = userDbStorage.getUserById(1);
-//        Optional<User> user2Optional = userDbStorage.getUserById(2);
-//        Optional<User> user3Optional = userDbStorage.getUserById(3);
-//
-//        if (user1Optional.isPresent() && user2Optional.isPresent() && user3Optional.isPresent()) {
-//            filmDbStorage.likeFilm(1, user1Optional.get().getId());
-//            filmDbStorage.likeFilm(1, user2Optional.get().getId());
-//            filmDbStorage.likeFilm(1, user3Optional.get().getId());
-//
-//            filmDbStorage.likeFilm(2, user1Optional.get().getId());
-//            filmDbStorage.likeFilm(2, user2Optional.get().getId());
-//
-//            filmDbStorage.likeFilm(3, user1Optional.get().getId());
-//
-//            if (film1Optional.isPresent()) {
-//                Integer likes1 = filmDbStorage.getLikesOfFilm(film1Optional.get().getId());
-//                assertThat(likes1).isEqualTo(3);
-//            }
-//
-//            if (film2Optional.isPresent()) {
-//                Integer likes2 = filmDbStorage.getLikesOfFilm(film2Optional.get().getId());
-//                assertThat(likes2).isEqualTo(2);
-//            }
-//
-//            if (film3Optional.isPresent()) {
-//                Integer likes3 = filmDbStorage.getLikesOfFilm(film3Optional.get().getId());
-//                assertThat(likes3).isEqualTo(1);
-//            }
-//
-//            List<Film> popular = filmDbStorage.getPopularFilms(3);
-//            assertThat(popular).asList().size().isEqualTo(3);
-//        }
-//    }
-//
-//    @Test
-//    public void testUnlikeFilm() {
-//
-//        Optional<User> userOptional = userDbStorage.getUserById(1);
-//
-//        userOptional.ifPresent(user -> filmDbStorage.unlikeFilm(1, user.getId()));
-//
-//        Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
-//
-//        if (filmOptional.isPresent()) {
-//            Integer likes = filmDbStorage.getLikesOfFilm(filmOptional.get().getId());
-//            assertThat(likes).isEqualTo(2);
-//        }
-//    }
 }

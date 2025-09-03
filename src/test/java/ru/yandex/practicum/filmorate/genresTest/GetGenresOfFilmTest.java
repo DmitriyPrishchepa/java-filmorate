@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.genresTest;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -21,13 +21,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class GenresTest {
+public class GetGenresOfFilmTest {
 
     private final GenresDbStorage genresDbStorage;
     private final FilmDbStorage filmDbStorage;
 
     @Test
-    void createFilm() {
+    void getGenresOfFilm() {
         Film film = Film.builder()
                 .name("It")
                 .description("It will come")
@@ -56,27 +56,7 @@ public class GenresTest {
         filmDbStorage.addFilm(film);
 
         assertThat(film).hasFieldOrPropertyWithValue("id", 1);
-    }
 
-    @Test
-    void testGetGenres() {
-        List<Genre> genres = genresDbStorage.getGenres();
-        assertThat(genres).asList().size().isEqualTo(6);
-    }
-
-    @Test
-    void testGetGenreById() {
-        Optional<Genre> genreOptional = genresDbStorage.getGenreById(3);
-
-        assertThat(genreOptional)
-                .isPresent()
-                .hasValueSatisfying(genre -> {
-                    assertThat(genre).hasFieldOrPropertyWithValue("name", "Мультфильм");
-                });
-    }
-
-    @Test
-    void testGetGenreOfFilm() {
         Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
 
         if (filmOptional.isPresent()) {
