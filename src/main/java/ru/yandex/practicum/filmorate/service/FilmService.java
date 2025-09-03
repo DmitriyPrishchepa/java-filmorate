@@ -108,7 +108,7 @@ public class FilmService {
         filmStorage.likeFilm(id, userId);
     }
 
-    public void unLikeFilm(Long id, Long userId) {
+    public void unLikeFilm(Integer id, Integer userId) {
         filmStorage.unlikeFilm(id, userId);
     }
 

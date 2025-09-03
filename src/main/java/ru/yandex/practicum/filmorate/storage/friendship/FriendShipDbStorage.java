@@ -15,7 +15,6 @@ import java.util.Map;
 public class FriendShipDbStorage extends BaseRepository<FriendShip> implements FriendShipStorage {
     public FriendShipDbStorage(JdbcTemplate jdbc, RowMapper<FriendShip> mapper) {
         super(jdbc, mapper);
-        jdbc.update("DELETE FROM friendship");
     }
 
     @Override
@@ -37,5 +36,11 @@ public class FriendShipDbStorage extends BaseRepository<FriendShip> implements F
     public void removeUserFromFriends(Integer id, Integer friendId) {
         final String REMOVE_FROM_FRIEND = "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?";
         update(REMOVE_FROM_FRIEND, id, friendId);
+    }
+
+    @Override
+    public List<FriendShip> getAllFriendship() {
+        final String GET_ALL = "SELECT * FROM friendship";
+        return findMany(GET_ALL);
     }
 }

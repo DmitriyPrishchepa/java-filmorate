@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS films (
     description varchar(200) NOT NULL,
     release_date DATE NOT NULL,
     duration integer NOT NULL,
-    mpa_id integer NOT NULL
+    mpa_id integer
 );
 
 CREATE TABLE IF NOT EXISTS genres (

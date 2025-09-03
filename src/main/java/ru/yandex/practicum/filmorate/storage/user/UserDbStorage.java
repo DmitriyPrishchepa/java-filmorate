@@ -5,12 +5,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
-import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -86,10 +86,9 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     }
 
     @Override
-    public User getUserById(Integer id) {
+    public Optional<User> getUserById(Integer id) {
         final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-        return findOne(FIND_BY_ID_QUERY, id)
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+        return findOne(FIND_BY_ID_QUERY, id);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
                 "SELECT * FROM users u " +
                         "JOIN friendship f " +
                         "ON u.id = f.friend_id " +
-                        "WHERE u.id = ?";
+                        "WHERE f.user_id = ?";
         return findMany(FRIEND_GET, userId);
     }
 }

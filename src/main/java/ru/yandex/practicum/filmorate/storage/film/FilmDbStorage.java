@@ -53,6 +53,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
             film.setId(id);
             batchUpdate(film);
+            return film;
         } catch (
                 RuntimeException e) {
             e.getStackTrace();
@@ -116,7 +117,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     @Override
-    public void unlikeFilm(Long id, Long userId) {
+    public void unlikeFilm(Integer id, Integer userId) {
         final String UNLIKE_FILM_QUERY = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
         update(UNLIKE_FILM_QUERY, id, userId);
     }
@@ -136,6 +137,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return findMany(GET_POPULAR_QUERY, count);
+    }
+
+    @Override
+    public Integer getLikesOfFilm(Integer filmId) {
+        final String sql = "SELECT COUNT(user_id) FROM likes WHERE film_id = ?";
+        return jdbc.queryForObject(sql, Integer.class, filmId);
     }
 
     public void batchUpdate(final Film film) {
