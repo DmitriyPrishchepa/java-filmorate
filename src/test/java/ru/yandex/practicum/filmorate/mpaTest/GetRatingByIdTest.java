@@ -29,5 +29,7 @@ public class GetRatingByIdTest {
                 .hasValueSatisfying(mpa -> {
                     assertThat(mpa).hasFieldOrPropertyWithValue("name", "G");
                 });
+
+        mpaDbStorage.clearRating();
     }
 }

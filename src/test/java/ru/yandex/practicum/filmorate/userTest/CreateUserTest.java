@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.userTest;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,13 +19,9 @@ public class CreateUserTest {
 
     private final UserDbStorage userStorage;
 
-    @AfterEach
-    void cleanUsers() {
-        userStorage.removeAllUsers();
-    }
-
     @Test
     public void testAddUser() {
+
         userStorage.addUser(User.builder()
                 .name("Alex")
                 .email("alex@gmail.com")
@@ -71,5 +65,7 @@ public class CreateUserTest {
                 .build());
 
         assertThat(user).hasFieldOrPropertyWithValue("id", 3);
+
+        userStorage.removeAllUsers();
     }
 }

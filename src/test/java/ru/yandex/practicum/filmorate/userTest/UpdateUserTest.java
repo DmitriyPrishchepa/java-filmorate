@@ -38,5 +38,7 @@ public class UpdateUserTest {
 
         User updatedUser = userStorage.updateUser(newUser);
         assertThat(updatedUser).hasFieldOrPropertyWithValue("name", "Dima");
+
+        userStorage.removeAllUsers();
     }
 }

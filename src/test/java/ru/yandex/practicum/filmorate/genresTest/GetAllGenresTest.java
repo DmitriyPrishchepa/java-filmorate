@@ -23,5 +23,7 @@ public class GetAllGenresTest {
     void getAll() {
         List<Genre> genres = genresDbStorage.getGenres();
         assertThat(genres).asList().size().isEqualTo(6);
+
+        genresDbStorage.clearGenres();
     }
 }

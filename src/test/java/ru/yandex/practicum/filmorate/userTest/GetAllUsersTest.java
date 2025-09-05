@@ -38,5 +38,7 @@ public class GetAllUsersTest {
 
         List<User> users = userStorage.getAllUsers().stream().toList();
         assertThat(users).asList().size().isEqualTo(2);
+
+        userStorage.removeAllUsers();
     }
 }

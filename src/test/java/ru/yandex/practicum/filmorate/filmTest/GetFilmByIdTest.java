@@ -41,5 +41,7 @@ public class GetFilmByIdTest {
                 .hasValueSatisfying(film -> {
                     assertThat(film).hasFieldOrPropertyWithValue("description", "It will come");
                 });
+
+        filmDbStorage.clearFilms();
     }
 }

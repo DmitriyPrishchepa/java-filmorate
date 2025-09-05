@@ -26,5 +26,7 @@ public interface FilmStorage {
 
     Integer getLikesOfFilm(Integer filmId);
 
-    void removeAlFilms();
+    void clearLikes();
+
+    void clearFilms();
 }

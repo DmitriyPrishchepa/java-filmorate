@@ -36,5 +36,7 @@ public class FindUserByIdTest {
                 .hasValueSatisfying(user -> {
                     assertThat(user).hasFieldOrPropertyWithValue("email", "alex@gmail.com");
                 });
+
+        userStorage.removeAllUsers();
     }
 }

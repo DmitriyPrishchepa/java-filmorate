@@ -23,5 +23,7 @@ public class GetRatingsTest {
     void testGetRatings() {
         List<Mpa> ratings = mpaDbStorage.getRatings();
         assertThat(ratings).asList().size().isEqualTo(5);
+
+        mpaDbStorage.clearRating();
     }
 }

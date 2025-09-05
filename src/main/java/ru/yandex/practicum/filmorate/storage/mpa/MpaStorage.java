@@ -11,4 +11,6 @@ public interface MpaStorage {
     List<Mpa> getRatings();
 
     Optional<Mpa> getRatingById(Integer id);
+
+    void clearRating();
 }

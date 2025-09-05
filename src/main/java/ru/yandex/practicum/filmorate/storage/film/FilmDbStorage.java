@@ -146,12 +146,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         return jdbc.queryForObject(sql, Integer.class, filmId);
     }
 
-    @Override
-    public void removeAlFilms() {
-        final String sql = "DELETE FROM films";
-        jdbc.update(sql);
-    }
-
     public void batchUpdate(final Film film) {
         final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
         jdbc.batchUpdate(
@@ -168,5 +162,17 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                         return film.getGenres().size();
                     }
                 });
+    }
+
+    @Override
+    public void clearLikes() {
+        final String sql = "DELETE FROM likes";
+        update(sql);
+    }
+
+    @Override
+    public void clearFilms() {
+        final String sql = "DELETE FROM films";
+        update(sql);
     }
 }

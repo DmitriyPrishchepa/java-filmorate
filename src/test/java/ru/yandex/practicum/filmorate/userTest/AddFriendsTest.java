@@ -50,5 +50,8 @@ public class AddFriendsTest {
         List<User> friends = userStorage.friendGet(1);
         assertThat(friends).asList().size().isEqualTo(2);
         assertThat(friends).asList().size().isNotEqualTo(3);
+
+        friendShipDbStorage.clearFriendship();
+        userStorage.removeAllUsers();
     }
 }

@@ -139,6 +139,9 @@ public class GetPopularTest {
 
             List<Film> popular = filmDbStorage.getPopularFilms(3);
             assertThat(popular).asList().size().isEqualTo(3);
+
+            filmDbStorage.clearLikes();
+            filmDbStorage.clearFilms();
         }
     }
 }

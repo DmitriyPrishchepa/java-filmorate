@@ -48,5 +48,7 @@ public class UpdateFilmTest {
         Film updatedFilm = filmDbStorage.updateFilm(newFilm);
 
         assertThat(updatedFilm).hasFieldOrPropertyWithValue("name", "Pirates of Caribbean");
+
+        filmDbStorage.clearFilms();
     }
 }

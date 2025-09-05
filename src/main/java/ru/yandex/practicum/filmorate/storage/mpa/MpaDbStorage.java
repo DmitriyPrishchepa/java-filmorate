@@ -28,4 +28,10 @@ public class MpaDbStorage extends BaseRepository<Mpa> implements MpaStorage {
     public Optional<Mpa> getRatingById(Integer id) {
         return findOne(GET_RATING_BY_ID, id);
     }
+
+    @Override
+    public void clearRating() {
+        final String sql = "DELETE FROM mpa";
+        update(sql);
+    }
 }

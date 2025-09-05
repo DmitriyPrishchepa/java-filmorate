@@ -12,4 +12,6 @@ public interface FriendShipStorage {
     void removeUserFromFriends(Integer id, Integer friendId);
 
     List<FriendShip> getAllFriendship();
+
+    void clearFriendship();
 }

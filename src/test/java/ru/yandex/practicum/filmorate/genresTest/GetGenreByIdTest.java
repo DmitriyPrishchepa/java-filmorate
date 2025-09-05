@@ -28,5 +28,7 @@ public class GetGenreByIdTest {
                 .hasValueSatisfying(genre -> {
                     assertThat(genre).hasFieldOrPropertyWithValue("name", "Мультфильм");
                 });
+
+        genresDbStorage.clearGenres();
     }
 }

@@ -79,5 +79,7 @@ public class CreateFilmTest {
                 .build());
 
         assertThat(film).hasFieldOrPropertyWithValue("id", 3);
+
+        filmDbStorage.clearFilms();
     }
 }

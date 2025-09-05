@@ -39,4 +39,10 @@ public class GenresDbStorage extends BaseRepository<Genre> implements GenreStora
 
         return findMany(GET_GENRES_OF_FILM_QUERY, id);
     }
+
+    @Override
+    public void clearGenres() {
+        final String sql = "DELETE FROM genres";
+        update(sql);
+    }
 }

@@ -81,5 +81,7 @@ public class GetAllFilmsTest {
 
         List<Film> films = filmDbStorage.getAllFilms().stream().toList();
         assertThat(films).asList().size().isEqualTo(5);
+
+        filmDbStorage.clearFilms();
     }
 }

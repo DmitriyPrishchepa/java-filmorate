@@ -52,5 +52,8 @@ public class RemoveFromFriendsTest {
 
         List<User> friends = userStorage.friendGet(1);
         assertThat(friends).asList().size().isEqualTo(1);
+
+        friendShipDbStorage.clearFriendship();
+        userStorage.removeAllUsers();
     }
 }

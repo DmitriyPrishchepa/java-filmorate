@@ -63,5 +63,8 @@ public class GetGenresOfFilmTest {
             List<Genre> genreOptional = genresDbStorage.getGenresOfFilm(filmOptional.get().getId());
             assertThat(genreOptional).asList().size().isEqualTo(2);
         }
+
+        genresDbStorage.clearGenres();
+        filmDbStorage.clearFilms();
     }
 }

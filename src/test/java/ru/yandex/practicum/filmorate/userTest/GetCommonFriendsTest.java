@@ -59,5 +59,8 @@ public class GetCommonFriendsTest {
                 .hasValueSatisfying(user -> {
                     assertThat(commonFriends).asList().contains(user);
                 });
+
+        friendShipDbStorage.clearFriendship();
+        userStorage.removeAllUsers();
     }
 }

@@ -43,4 +43,10 @@ public class FriendShipDbStorage extends BaseRepository<FriendShip> implements F
         final String GET_ALL = "SELECT * FROM friendship";
         return findMany(GET_ALL);
     }
+
+    @Override
+    public void clearFriendship() {
+        final String CLEAR = "DELETE FROM friendship";
+        update(CLEAR);
+    }
 }
