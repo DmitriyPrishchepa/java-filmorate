@@ -1,8 +1,12 @@
 --TRUNCATE TABLE film_genres;
 --TRUNCATE TABLE likes;
 --TRUNCATE TABLE friendship;
-ALTER TABLE users ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE films ALTER COLUMN id RESTART WITH 1;
+DROP table friendship;
+DROP table likes;
+DROP table film_genres;
+
+TRUNCATE TABLE users;
+TRUNCATE TABLE films;
 --TRUNCATE TABLE films;
 
 INSERT INTO mpa(name) VALUES('G');
