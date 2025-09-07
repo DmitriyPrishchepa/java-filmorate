@@ -43,12 +43,13 @@ public class BaseInstructions {
                 "SELECT table_name FROM information_schema.tables " +
                         "WHERE table_schema='PUBLIC'", String.class);
 
+        jdbcTemplate.execute("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE films ALTER COLUMN id RESTART WITH 1");
+
         tables.stream()
                 .filter(t -> !skipTables.contains(t.toLowerCase()))
                 .forEach(t -> jdbcTemplate.execute("TRUNCATE TABLE " + t));
 
-        jdbcTemplate.execute("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("ALTER TABLE films ALTER COLUMN id RESTART WITH 1");
 
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
