@@ -1,33 +1,22 @@
 package ru.yandex.practicum.filmorate.genresTest;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.genres.GenresDbStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class GetGenresOfFilmTest {
-
-    private final GenresDbStorage genresDbStorage;
-    private final FilmDbStorage filmDbStorage;
+public class GetGenresOfFilmTest extends BaseInstructions {
 
     @Test
     void getGenresOfFilm() {
+
         Film film = Film.builder()
                 .name("It")
                 .description("It will come")
@@ -53,18 +42,13 @@ public class GetGenresOfFilmTest {
 
         film.getGenres().addAll(genres);
 
-        filmDbStorage.addFilm(film);
+        filmService.addFilm(film);
 
         assertThat(film).hasFieldOrPropertyWithValue("id", 1);
 
-        Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
+        Film film1 = filmService.getFilmById(1);
 
-        if (filmOptional.isPresent()) {
-            List<Genre> genreOptional = genresDbStorage.getGenresOfFilm(filmOptional.get().getId());
-            assertThat(genreOptional).asList().size().isEqualTo(2);
-        }
-
-        genresDbStorage.clearGenres();
-        filmDbStorage.clearFilms();
+        List<Genre> genreOptional = genreService.getGenresOfFilm(film1.getId());
+        assertThat(genreOptional).asList().size().isEqualTo(2);
     }
 }

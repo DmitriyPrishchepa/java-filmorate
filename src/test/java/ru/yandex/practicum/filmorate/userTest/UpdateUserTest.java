@@ -1,27 +1,25 @@
 package ru.yandex.practicum.filmorate.userTest;
 
-import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UpdateUserTest {
+public class UpdateUserTest extends BaseInstructions {
 
-    private final UserDbStorage userStorage;
+    @BeforeEach
+    void cleanTables() {
+        cleanAllTables();
+    }
 
     @Test
     void updateUser() {
-        userStorage.addUser(User.builder()
+
+        userService.addUser(User.builder()
                 .name("Alex")
                 .email("alex@gmail.com")
                 .login("alexandr")
@@ -36,9 +34,7 @@ public class UpdateUserTest {
                 .birthday(LocalDate.of(1995, 10, 10))
                 .build();
 
-        User updatedUser = userStorage.updateUser(newUser);
+        User updatedUser = userService.updateUser(newUser);
         assertThat(updatedUser).hasFieldOrPropertyWithValue("name", "Dima");
-
-        userStorage.removeAllUsers();
     }
 }

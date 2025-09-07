@@ -1,29 +1,25 @@
 package ru.yandex.practicum.filmorate.genresTest;
 
-import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.genres.GenresDbStorage;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class GetAllGenresTest {
+public class GetAllGenresTest extends BaseInstructions {
 
-    private final GenresDbStorage genresDbStorage;
+    @BeforeEach
+    void cleanTables() {
+        cleanAllTables();
+    }
 
     @Test
     void getAll() {
-        List<Genre> genres = genresDbStorage.getGenres();
-        assertThat(genres).asList().size().isEqualTo(6);
 
-        genresDbStorage.clearGenres();
+        List<Genre> genres = genreService.getGenres();
+        assertThat(genres).asList().size().isEqualTo(6);
     }
 }

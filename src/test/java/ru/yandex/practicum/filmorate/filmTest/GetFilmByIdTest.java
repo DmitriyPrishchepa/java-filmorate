@@ -1,29 +1,25 @@
 package ru.yandex.practicum.filmorate.filmTest;
 
-import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class GetFilmByIdTest {
+public class GetFilmByIdTest extends BaseInstructions {
 
-    private final FilmDbStorage filmDbStorage;
+    @BeforeEach
+    void cleanTables() {
+        cleanAllTables();
+    }
 
     @Test
     public void getById() {
-        filmDbStorage.addFilm(Film.builder()
+        filmService.addFilm(Film.builder()
                 .name("It")
                 .description("It will come")
                 .releaseDate(LocalDate.of(2017, 9, 5))
@@ -34,14 +30,8 @@ public class GetFilmByIdTest {
                         .build())
                 .build());
 
-        Optional<Film> filmOptional = filmDbStorage.getFilmById(1);
+        Film film = filmService.getFilmById(1);
 
-        assertThat(filmOptional)
-                .isPresent()
-                .hasValueSatisfying(film -> {
-                    assertThat(film).hasFieldOrPropertyWithValue("description", "It will come");
-                });
-
-        filmDbStorage.clearFilms();
+        assertThat(film).hasFieldOrPropertyWithValue("description", "It will come");
     }
 }
