@@ -1,12 +1,8 @@
---TRUNCATE TABLE film_genres;
---TRUNCATE TABLE likes;
---TRUNCATE TABLE friendship;
-DROP table friendship;
-DROP table likes;
-DROP table film_genres;
-
-TRUNCATE TABLE users;
-TRUNCATE TABLE films;
+--TRUNCATE table friendship;
+--TRUNCATE table likes;
+--TRUNCATE table film_genres;
+--
+--TRUNCATE TABLE users;
 --TRUNCATE TABLE films;
 
 INSERT INTO mpa(name) VALUES('G');
