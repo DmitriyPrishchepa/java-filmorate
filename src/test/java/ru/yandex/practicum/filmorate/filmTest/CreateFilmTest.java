@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.filmTest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Slf4j
 public class CreateFilmTest extends BaseInstructions {
 
     @BeforeEach
@@ -29,6 +31,8 @@ public class CreateFilmTest extends BaseInstructions {
                         .id(3)
                         .name("PG-13")
                         .build());
+
+        log.debug("id {}", film.getId());
 
 //        Film testFilm = createFilmForTest(
 //                "Bad boys",

@@ -35,23 +35,19 @@ public class BaseInstructions {
     protected GenreService genreService;
 
     protected void cleanAllTables() {
-        // Отключаем проверки внешних ключей (для H2), чтобы удалять таблицы в любом порядке
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
 
-        // Таблицы, которые не очищаем
         List<String> skipTables = List.of("genres", "mpa");
 
-        // Получаем список всех таблиц из метаданных
         List<String> tables = jdbcTemplate.queryForList(
                 "SELECT table_name FROM information_schema.tables " +
                         "WHERE table_schema='PUBLIC'", String.class);
 
-        // Удаляем все данные из таблиц, кроме исключённых
         tables.stream()
                 .filter(t -> !skipTables.contains(t.toLowerCase()))
                 .forEach(t -> jdbcTemplate.execute("TRUNCATE TABLE " + t));
 
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE"); // Включаем проверки обратно
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     protected Film createFilmForTest(
