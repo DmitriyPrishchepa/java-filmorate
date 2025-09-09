@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.filmTest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Slf4j
 public class GetPopularTest extends BaseInstructions {
 
     @BeforeEach
@@ -73,25 +75,31 @@ public class GetPopularTest extends BaseInstructions {
                         .name("PG-13")
                         .build());
 
-        createFilmForTest(
-                "The Pursuit of Happyness",
-                "The Pursuit of Happyness",
-                LocalDate.of(2003, 7, 15),
-                141,
-                Mpa.builder()
-                        .id(3)
-                        .name("PG-13")
-                        .build());
+//        createFilmForTest(
+//                "The Pursuit of Happyness",
+//                "The Pursuit of Happyness",
+//                LocalDate.of(2003, 7, 15),
+//                141,
+//                Mpa.builder()
+//                        .id(3)
+//                        .name("PG-13")
+//                        .build());
+//
+//        createFilmForTest(
+//                "Bad boys 2",
+//                "Bad boys 2",
+//                LocalDate.of(2006, 12, 9),
+//                141,
+//                Mpa.builder()
+//                        .id(3)
+//                        .name("PG-13")
+//                        .build());
 
-        createFilmForTest(
-                "Bad boys 2",
-                "Bad boys 2",
-                LocalDate.of(2006, 12, 9),
-                141,
-                Mpa.builder()
-                        .id(3)
-                        .name("PG-13")
-                        .build());
+        List<Film> allFilms = filmService.getAllFilms().stream().toList();
+
+        for (Film film : allFilms) {
+            log.debug("film {}", film);
+        }
 
         Film film1 = filmService.getFilmById(1);
         Film film2 = filmService.getFilmById(2);
