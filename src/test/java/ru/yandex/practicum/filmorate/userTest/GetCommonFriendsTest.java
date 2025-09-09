@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.userTest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Slf4j
 public class GetCommonFriendsTest extends BaseInstructions {
 
     @BeforeEach
@@ -42,13 +44,21 @@ public class GetCommonFriendsTest extends BaseInstructions {
                 LocalDate.of(1999, 12, 5)
         );
 
-        friendShipService.addFriend(1, 2);
-        friendShipService.addFriend(3, 2);
+        List<User> allUsers = userService.getAllUsers().stream().toList();
 
-        List<User> commonFriends = userService.getCommonFriends(1, 3);
+        for (User user : allUsers) {
+            log.debug("user {}", user);
+        }
 
-        User user = userService.getUserById(2);
+        User userAlex = allUsers.getFirst();
+        User userDima = allUsers.get(1);
+        User igorUser = allUsers.getLast();
 
-        assertThat(commonFriends).asList().contains(user);
+        friendShipService.addFriend(userAlex.getId(), userDima.getId());
+        friendShipService.addFriend(igorUser.getId(), userDima.getId());
+
+        List<User> commonFriends = userService.getCommonFriends(userAlex.getId(), igorUser.getId());
+
+        assertThat(commonFriends).asList().contains(userDima);
     }
 }

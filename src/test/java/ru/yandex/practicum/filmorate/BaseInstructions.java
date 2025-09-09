@@ -112,28 +112,6 @@ public class BaseInstructions {
     }
 
     protected void updateFilmForTest(Film newFilm) {
-
-        Film film = Film.builder()
-                .name(newFilm.getName())
-                .description(newFilm.getDescription())
-                .releaseDate(newFilm.getReleaseDate())
-                .duration(newFilm.getDuration())
-                .mpa(newFilm.getMpa())
-                .build();
-
-        List<Genre> genres = List.of(
-                Genre.builder()
-                        .id(1)
-                        .name("Комедия")
-                        .build(),
-                Genre.builder()
-                        .id(2)
-                        .name("Драма")
-                        .build()
-        );
-
-        film.getGenres().addAll(genres);
-
         filmService.updateFilm(newFilm);
     }
 
@@ -154,14 +132,6 @@ public class BaseInstructions {
     }
 
     protected void updateUserForTest(User newUser) {
-
-        User user = User.builder()
-                .name(newUser.getName())
-                .email(newUser.getEmail())
-                .login(newUser.getLogin())
-                .birthday(newUser.getBirthday())
-                .build();
-
         userService.updateUser(newUser);
     }
 }
