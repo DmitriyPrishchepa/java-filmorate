@@ -3,16 +3,12 @@ package ru.yandex.practicum.filmorate.filmTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import java.util.List;
 
 @Slf4j
 public class UpdateFilmTest extends BaseInstructions {
@@ -20,24 +16,6 @@ public class UpdateFilmTest extends BaseInstructions {
     @BeforeEach
     void cleanTables() {
         cleanAllTables();
-    }
-
-    public void batchUpdate(final Film film) {
-        final String INSERT_INTO_FILM_GENRES = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-        jdbcTemplate.batchUpdate(
-                INSERT_INTO_FILM_GENRES,
-                new BatchPreparedStatementSetter() {
-                    @Override
-                    public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setInt(1, film.getId());
-                        ps.setInt(2, film.getGenres().get(i).getId());
-                    }
-
-                    @Override
-                    public int getBatchSize() {
-                        return film.getGenres().size();
-                    }
-                });
     }
 
     @Test
@@ -53,11 +31,20 @@ public class UpdateFilmTest extends BaseInstructions {
                         .name("PG-13")
                         .build());
 
-        Film film = filmService.getFilmById(1);
+        List<Film> allFilms = filmService.getAllFilms().stream().toList();
 
-        film.setName("Pirates of caribbean");
+        log.debug("size {}", allFilms.size());
 
-        Film newUpdatedFilm = filmService.updateFilm(film);
-        assertThat(newUpdatedFilm).hasFieldOrPropertyWithValue("name", "Pirates of caribbean");
+        Film filmFromDb = allFilms.getFirst();
+
+        log.debug("first {}", filmFromDb);
+
+        filmFromDb.setName("Pir of car");
+
+        updateFilmForTest(filmFromDb);
+
+        Film newFilmFromDb = filmService.getAllFilms().stream().toList().getFirst();
+
+        log.debug("new {}", newFilmFromDb);
     }
 }

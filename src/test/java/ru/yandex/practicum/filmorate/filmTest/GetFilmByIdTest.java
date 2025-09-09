@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -19,19 +20,21 @@ public class GetFilmByIdTest extends BaseInstructions {
 
     @Test
     public void getById() {
-        filmService.addFilm(Film.builder()
-                .name("It")
-                .description("It will come")
-                .releaseDate(LocalDate.of(2017, 9, 5))
-                .duration(135)
-                .mpa(Mpa.builder()
+
+        createFilmForTest(
+                "It",
+                "It will come",
+                LocalDate.of(2017, 9, 5),
+                135,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
-        Film film = filmService.getFilmById(1);
+        List<Film> films = filmService.getAllFilms().stream().toList();
 
-        assertThat(film).hasFieldOrPropertyWithValue("description", "It will come");
+        Film film = filmService.getFilmById(films.getFirst().getId());
+
+        assertThat(film).hasFieldOrPropertyWithValue("name", "It");
     }
 }

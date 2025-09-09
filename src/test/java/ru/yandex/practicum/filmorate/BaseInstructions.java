@@ -112,23 +112,28 @@ public class BaseInstructions {
     }
 
     protected void updateFilmForTest(Film newFilm) {
-        final String UPDATE_QUERY = "UPDATE films SET " +
-                "name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE id = ?";
 
-        try {
-            jdbcTemplate.update(
-                    UPDATE_QUERY,
-                    newFilm.getName(),
-                    newFilm.getDescription(),
-                    newFilm.getReleaseDate(),
-                    newFilm.getDuration(),
-                    newFilm.getMpa().getId()
-            );
+        Film film = Film.builder()
+                .name(newFilm.getName())
+                .description(newFilm.getDescription())
+                .releaseDate(newFilm.getReleaseDate())
+                .duration(newFilm.getDuration())
+                .mpa(newFilm.getMpa())
+                .build();
 
-        } catch (
-                RuntimeException e) {
-            e.getStackTrace();
-            System.out.println(Arrays.toString(e.getStackTrace()));
-        }
+        List<Genre> genres = List.of(
+                Genre.builder()
+                        .id(1)
+                        .name("Комедия")
+                        .build(),
+                Genre.builder()
+                        .id(2)
+                        .name("Драма")
+                        .build()
+        );
+
+        film.getGenres().addAll(genres);
+
+        filmService.updateFilm(newFilm);
     }
 }
