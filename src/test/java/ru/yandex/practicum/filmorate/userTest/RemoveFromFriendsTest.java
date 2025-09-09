@@ -20,26 +20,26 @@ public class RemoveFromFriendsTest extends BaseInstructions {
     @Test
     void removeFriend() {
 
-        userService.addUser(User.builder()
-                .name("Alex")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build());
+        createUserForTest(
+                "Alex",
+                "alex@gmail.com",
+                "alexandr",
+                LocalDate.of(1995, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Dima")
-                .email("dimchik@gmail.com")
-                .login("dmitr")
-                .birthday(LocalDate.of(2000, 10, 10))
-                .build());
+        createUserForTest(
+                "Dima",
+                "dimchik@gmail.com",
+                "dmitr",
+                LocalDate.of(2000, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Igor")
-                .email("igor@gmail.com")
-                .login("iggir")
-                .birthday(LocalDate.of(1999, 12, 5))
-                .build());
+        createUserForTest(
+                "Igor",
+                "igor@gmail.com",
+                "iggir",
+                LocalDate.of(1999, 12, 5)
+        );
 
         friendShipService.addFriend(1, 2);
         friendShipService.addFriend(1, 3);

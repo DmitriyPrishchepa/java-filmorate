@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.userTest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Slf4j
 public class GetAllUsersTest extends BaseInstructions {
 
     @BeforeEach
@@ -20,21 +22,25 @@ public class GetAllUsersTest extends BaseInstructions {
     @Test
     void getAll() {
 
-        userService.addUser(User.builder()
-                .name("Alex")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build());
+        createUserForTest(
+                "Alex",
+                "alex@gmail.com",
+                "alexandr",
+                LocalDate.of(1995, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Dima")
-                .email("dimchik@gmail.com")
-                .login("dmitr")
-                .birthday(LocalDate.of(2000, 10, 10))
-                .build());
+        createUserForTest(
+                "Dmitriy",
+                "dima@gmail.com",
+                "dm",
+                LocalDate.of(1993, 11, 10)
+        );
+
 
         List<User> users = userService.getAllUsers().stream().toList();
+
+        log.debug("users {}", users.size());
+
         assertThat(users).asList().size().isEqualTo(2);
     }
 }
