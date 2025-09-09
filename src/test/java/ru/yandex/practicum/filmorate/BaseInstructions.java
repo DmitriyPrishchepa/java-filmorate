@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.*;
 
 import java.time.LocalDate;
@@ -134,5 +135,21 @@ public class BaseInstructions {
         film.getGenres().addAll(genres);
 
         filmService.updateFilm(newFilm);
+    }
+
+    protected void createUserForTest(
+            String name,
+            String email,
+            String login,
+            LocalDate birthday
+    ) {
+        User user = User.builder()
+                .name(name)
+                .email(email)
+                .login(login)
+                .birthday(birthday)
+                .build();
+
+        userService.addUser(user);
     }
 }

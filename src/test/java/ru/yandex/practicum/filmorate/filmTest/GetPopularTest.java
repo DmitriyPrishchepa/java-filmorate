@@ -22,81 +22,76 @@ public class GetPopularTest extends BaseInstructions {
     @Test
     public void testGetPopularAndLikeFilm() {
 
-        userService.addUser(User.builder()
-                .name("Svyatoslav")
-                .email("svyat@gmail.com")
-                .login("svyatoy")
-                .birthday(LocalDate.of(1992, 5, 11))
-                .build());
+        createUserForTest(
+                "Svyatoslav",
+                "svyat@gmail.com",
+                "svyatoy",
+                LocalDate.of(1992, 5, 11)
+        );
 
-        userService.addUser(User.builder()
-                .name("Oleg")
-                .email("olli@gmail.com")
-                .login("olegek")
-                .birthday(LocalDate.of(1991, 5, 11))
-                .build());
+        createUserForTest(
+                "Oleg",
+                "olli@gmail.com",
+                "olegek",
+                LocalDate.of(1991, 5, 11)
+        );
 
-        userService.addUser(User.builder()
-                .name("John")
-                .email("jonny@gmail.com")
-                .login("j")
-                .birthday(LocalDate.of(1991, 10, 15))
-                .build());
+        createUserForTest(
+                "John",
+                "jonny@gmail.com",
+                "j",
+                LocalDate.of(1991, 10, 15)
+        );
 
-        filmService.addFilm(Film.builder()
-                .name("It")
-                .description("It will come")
-                .releaseDate(LocalDate.of(2017, 9, 5))
-                .duration(135)
-                .mpa(Mpa.builder()
+        createFilmForTest(
+                "It",
+                "It will come",
+                LocalDate.of(2017, 9, 5),
+                135,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
-        filmService.addFilm(Film.builder()
-                .name("Bad boys")
-                .description("Bad boys, bad boys, what you gonna do...")
-                .releaseDate(LocalDate.of(1995, 4, 6))
-                .duration(119)
-                .mpa(Mpa.builder()
+        createFilmForTest(
+                "Bad boys",
+                "Bad boys, bad boys, what you gonna do...",
+                LocalDate.of(1995, 4, 6),
+                119,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
-        Film film = filmService.addFilm(Film.builder()
-                .name("The Secret Life of Walter Mitty")
-                .description("The Secret Life of Walter Mitty")
-                .releaseDate(LocalDate.of(2013, 10, 5))
-                .duration(151)
-                .mpa(Mpa.builder()
+        createFilmForTest(
+                "The Secret Life of Walter Mitty",
+                "The Secret Life of Walter Mitty",
+                LocalDate.of(2013, 10, 5),
+                151,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
-        filmService.addFilm(Film.builder()
-                .name("The Pursuit of Happyness")
-                .description("The Pursuit of Happyness")
-                .releaseDate(LocalDate.of(2003, 7, 15))
-                .duration(141)
-                .mpa(Mpa.builder()
+        createFilmForTest(
+                "The Pursuit of Happyness",
+                "The Pursuit of Happyness",
+                LocalDate.of(2003, 7, 15),
+                141,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
-        filmService.addFilm(Film.builder()
-                .name("Bad boys 2")
-                .description("Bad boys 2")
-                .releaseDate(LocalDate.of(2006, 12, 9))
-                .duration(141)
-                .mpa(Mpa.builder()
+        createFilmForTest(
+                "Bad boys 2",
+                "Bad boys 2",
+                LocalDate.of(2006, 12, 9),
+                141,
+                Mpa.builder()
                         .id(3)
                         .name("PG-13")
-                        .build())
-                .build());
+                        .build());
 
         Film film1 = filmService.getFilmById(1);
         Film film2 = filmService.getFilmById(2);
