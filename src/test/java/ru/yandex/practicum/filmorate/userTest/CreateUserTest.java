@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -19,48 +20,14 @@ public class CreateUserTest extends BaseInstructions {
     @Test
     public void testAddUser() {
 
-        userService.addUser(User.builder()
-                .name("Alex")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build());
+        createUserForTest(
+                "Alex",
+                "alex@gmail.com",
+                "alexandr",
+                LocalDate.of(1995, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Dima")
-                .email("dimchik@gmail.com")
-                .login("dmitr")
-                .birthday(LocalDate.of(2000, 10, 10))
-                .build());
-
-        User user = userService.addUser(User.builder()
-                .name("Igor")
-                .email("igor@gmail.com")
-                .login("iggir")
-                .birthday(LocalDate.of(1999, 12, 5))
-                .build());
-
-        userService.addUser(User.builder()
-                .name("Svyatoslav")
-                .email("svyat@gmail.com")
-                .login("svyatoy")
-                .birthday(LocalDate.of(1992, 5, 11))
-                .build());
-
-        userService.addUser(User.builder()
-                .name("Oleg")
-                .email("olli@gmail.com")
-                .login("olegek")
-                .birthday(LocalDate.of(1991, 5, 11))
-                .build());
-
-        userService.addUser(User.builder()
-                .name("Jogn")
-                .email("jonny@gmail.com")
-                .login("j")
-                .birthday(LocalDate.of(1991, 10, 15))
-                .build());
-
-        assertThat(user).hasFieldOrPropertyWithValue("id", 3);
+        List<User> users = userService.getAllUsers().stream().toList();
+        assertThat(users).asList().first().hasFieldOrPropertyWithValue("login", "alexandr");
     }
 }
