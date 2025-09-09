@@ -41,12 +41,19 @@ public class RemoveFromFriendsTest extends BaseInstructions {
                 LocalDate.of(1999, 12, 5)
         );
 
-        friendShipService.addFriend(1, 2);
-        friendShipService.addFriend(1, 3);
 
-        friendShipService.removeUserFromFriends(1, 3);
+        List<User> allUsers = userService.getAllUsers().stream().toList();
 
-        List<User> friends = userService.friendGet(1);
+        User userAlex = allUsers.getFirst();
+        User userDima = allUsers.get(1);
+        User igorUser = allUsers.getLast();
+
+        friendShipService.addFriend(userAlex.getId(), userDima.getId());
+        friendShipService.addFriend(userAlex.getId(), igorUser.getId());
+
+        friendShipService.removeUserFromFriends(userAlex.getId(), igorUser.getId());
+
+        List<User> friends = userService.friendGet(userAlex.getId());
         assertThat(friends).asList().size().isEqualTo(1);
     }
 }

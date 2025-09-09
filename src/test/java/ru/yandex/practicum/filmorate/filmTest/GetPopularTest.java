@@ -75,48 +75,25 @@ public class GetPopularTest extends BaseInstructions {
                         .name("PG-13")
                         .build());
 
-//        createFilmForTest(
-//                "The Pursuit of Happyness",
-//                "The Pursuit of Happyness",
-//                LocalDate.of(2003, 7, 15),
-//                141,
-//                Mpa.builder()
-//                        .id(3)
-//                        .name("PG-13")
-//                        .build());
-//
-//        createFilmForTest(
-//                "Bad boys 2",
-//                "Bad boys 2",
-//                LocalDate.of(2006, 12, 9),
-//                141,
-//                Mpa.builder()
-//                        .id(3)
-//                        .name("PG-13")
-//                        .build());
-
         List<Film> allFilms = filmService.getAllFilms().stream().toList();
+        List<User> allUsers = userService.getAllUsers().stream().toList();
 
-        for (Film film : allFilms) {
-            log.debug("film {}", film);
-        }
+        Film film1 = allFilms.getFirst();
+        Film film2 = allFilms.get(1);
+        Film film3 = allFilms.get(2);
 
-        Film film1 = filmService.getFilmById(1);
-        Film film2 = filmService.getFilmById(2);
-        Film film3 = filmService.getFilmById(3);
+        User user1 = allUsers.getFirst();
+        User user2 = allUsers.get(1);
+        User user3 = allUsers.getLast();
 
-        User user1 = userService.getUserById(1);
-        User user2 = userService.getUserById(2);
-        User user3 = userService.getUserById(3);
+        filmService.likeFilm(film1.getId(), user1.getId());
+        filmService.likeFilm(film1.getId(), user2.getId());
+        filmService.likeFilm(film1.getId(), user3.getId());
 
-        filmService.likeFilm(1, user1.getId());
-        filmService.likeFilm(1, user2.getId());
-        filmService.likeFilm(1, user3.getId());
+        filmService.likeFilm(film2.getId(), user1.getId());
+        filmService.likeFilm(film2.getId(), user2.getId());
 
-        filmService.likeFilm(2, user1.getId());
-        filmService.likeFilm(2, user2.getId());
-
-        filmService.likeFilm(3, user1.getId());
+        filmService.likeFilm(film3.getId(), user1.getId());
 
         Integer likes1 = filmService.getLikesOfFilm(film1.getId());
         assertThat(likes1).isEqualTo(3);

@@ -20,31 +20,37 @@ public class AddFriendsTest extends BaseInstructions {
     @Test
     void addToFriends() {
 
-        userService.addUser(User.builder()
-                .name("Alex")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build());
+        createUserForTest(
+                "Alex",
+                "alex@gmail.com",
+                "alexandr",
+                LocalDate.of(1995, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Dima")
-                .email("dimchik@gmail.com")
-                .login("dmitr")
-                .birthday(LocalDate.of(2000, 10, 10))
-                .build());
+        createUserForTest(
+                "Dima",
+                "dimchik@gmail.com",
+                "dmitr",
+                LocalDate.of(2000, 10, 10)
+        );
 
-        userService.addUser(User.builder()
-                .name("Igor")
-                .email("igor@gmail.com")
-                .login("iggir")
-                .birthday(LocalDate.of(1999, 12, 5))
-                .build());
+        createUserForTest(
+                "Igor",
+                "igor@gmail.com",
+                "iggir",
+                LocalDate.of(1999, 12, 5)
+        );
 
-        friendShipService.addFriend(1, 2);
-        friendShipService.addFriend(1, 3);
+        List<User> allUsers = userService.getAllUsers().stream().toList();
 
-        List<User> friends = userService.friendGet(1);
+        User userAlex = allUsers.getFirst();
+        User userDima = allUsers.get(1);
+        User igorUser = allUsers.getLast();
+
+        friendShipService.addFriend(userAlex.getId(), userDima.getId());
+        friendShipService.addFriend(userAlex.getId(), igorUser.getId());
+
+        List<User> friends = userService.friendGet(userAlex.getId());
 
         assertThat(friends).asList().size().isEqualTo(2);
         assertThat(friends).asList().size().isNotEqualTo(3);
