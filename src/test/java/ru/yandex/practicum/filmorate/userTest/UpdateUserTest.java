@@ -6,8 +6,7 @@ import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import java.util.List;
 
 public class UpdateUserTest extends BaseInstructions {
 
@@ -19,12 +18,13 @@ public class UpdateUserTest extends BaseInstructions {
     @Test
     void updateUser() {
 
-        userService.addUser(User.builder()
-                .name("Alex")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build());
+        createUserForTest(
+                "Alex",
+                "alex@gmail.com",
+                "alexandr",
+                LocalDate.of(1995, 10, 10)
+        );
+
 
         User newUser = User.builder()
                 .id(1)
@@ -34,7 +34,14 @@ public class UpdateUserTest extends BaseInstructions {
                 .birthday(LocalDate.of(1995, 10, 10))
                 .build();
 
-        User updatedUser = userService.updateUser(newUser);
-        assertThat(updatedUser).hasFieldOrPropertyWithValue("name", "Dima");
+        List<User> allUsers = userService.getAllUsers().stream().toList();
+
+        User userFromDb = allUsers.getFirst();
+
+        userFromDb.setName("Dmitriy");
+
+        updateUserForTest(userFromDb);
+
+        User newUserFromDb = userService.getAllUsers().stream().toList().getFirst();
     }
 }

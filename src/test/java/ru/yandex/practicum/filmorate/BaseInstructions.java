@@ -152,4 +152,16 @@ public class BaseInstructions {
 
         userService.addUser(user);
     }
+
+    protected void updateUserForTest(User newUser) {
+
+        User user = User.builder()
+                .name(newUser.getName())
+                .email(newUser.getEmail())
+                .login(newUser.getLogin())
+                .birthday(newUser.getBirthday())
+                .build();
+
+        userService.updateUser(user)
+    }
 }
