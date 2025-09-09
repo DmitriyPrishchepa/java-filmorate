@@ -43,9 +43,6 @@ public class BaseInstructions {
                 "SELECT table_name FROM information_schema.tables " +
                         "WHERE table_schema='PUBLIC'", String.class);
 
-        jdbcTemplate.execute("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("ALTER TABLE films ALTER COLUMN id RESTART WITH 1");
-
         tables.stream()
                 .filter(t -> !skipTables.contains(t.toLowerCase()))
                 .forEach(t -> jdbcTemplate.execute("TRUNCATE TABLE " + t));
@@ -53,6 +50,34 @@ public class BaseInstructions {
 
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
+
+    protected List<Genre> genres = List.of(
+            Genre.builder()
+                    .id(1)
+                    .name("Комедия")
+                    .build(),
+            Genre.builder()
+                    .id(2)
+                    .name("Драма")
+                    .build(),
+            Genre.builder()
+                    .id(3)
+                    .name("Мультфильм")
+                    .build(),
+            Genre.builder()
+                    .id(4)
+                    .name("Триллер")
+                    .build(),
+            Genre.builder()
+                    .id(5)
+                    .name("Документальный")
+                    .build(),
+            Genre.builder()
+                    .id(6)
+                    .name("Боевик")
+                    .build()
+    );
+
 
     protected Film createFilmForTest(
             String name,
@@ -84,4 +109,6 @@ public class BaseInstructions {
 
         return filmService.addFilm(film);
     }
+
+
 }
