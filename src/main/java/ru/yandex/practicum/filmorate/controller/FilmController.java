@@ -33,32 +33,36 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film addFilm(@Valid @RequestBody Film film) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Film addFilm(@RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public Film updateFilm(@Valid @RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@Valid @PathVariable("id") @Positive Long id) {
+    public Film getFilmById(@Valid @PathVariable("id") @Positive Integer id) {
         return filmService.getFilmById(id);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void likeFilm(@PathVariable @Positive Long id, @Positive @PathVariable Long userId) {
-        filmService.likeFilm(id, userId);
+    @PutMapping("/{filmId}/like/{userId}")
+    public void likeFilm(@PathVariable("filmId") Integer filmId, @PathVariable("userId") Integer userId) {
+        filmService.likeFilm(filmId, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void unlikeFilm(@PathVariable @Positive Long id, @Positive @PathVariable Long userId) {
+    public void unlikeFilm(@PathVariable @Positive Integer id, @Positive @PathVariable Integer userId) {
         filmService.unLikeFilm(id, userId);
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@Positive @RequestParam(required = false) Integer count) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getPopularFilms(@RequestParam("count") Integer count) {
+        log.debug("count {}", count);
         return filmService.getPopularFilms(count);
     }
 }

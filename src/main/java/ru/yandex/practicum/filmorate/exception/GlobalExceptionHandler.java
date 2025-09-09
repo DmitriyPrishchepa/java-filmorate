@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.exeptions.ElementNotFoundException;
-import ru.yandex.practicum.filmorate.exception.exeptions.ParameterIsMissingException;
-import ru.yandex.practicum.filmorate.exception.exeptions.ValidateLoginIncorrectException;
+import ru.yandex.practicum.filmorate.exception.exeptions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +55,41 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleParameterIsMissing(ParameterIsMissingException e) {
         log.error("Parameter is missing");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleInternalError(InternalServerException e) {
+        log.error("Internal Server Error");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleNotMet(ConditionsNotMetException e) {
+        log.error("Conditions not met");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncorrectMpa(IncorrectAmountOfMpa e) {
+        log.error("Incorrect mpa amount");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDuplicate(DuplicateException e) {
+        log.error("Duplicate");
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidateFilm(ValidateFilmException e) {
+        log.error("Exception validate film");
         return new ErrorResponse(e.getMessage());
     }
 }

@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public interface FilmStorage {
@@ -15,13 +16,17 @@ public interface FilmStorage {
 
     Film updateFilm(Film film);
 
-    Long getNexId();
+    Optional<Film> getFilmById(Integer id);
 
-    Film getFilmById(Long id);
+    void likeFilm(Integer id, Integer userId);
 
-    void likeFilm(Long id, Long userId);
-
-    void unlikeFilm(Long id, Long userId);
+    void unlikeFilm(Integer id, Integer userId);
 
     List<Film> getPopularFilms(Integer count);
+
+    Integer getLikesOfFilm(Integer filmId);
+
+    void clearLikes();
+
+    void clearFilms();
 }

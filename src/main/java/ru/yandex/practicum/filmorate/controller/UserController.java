@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
@@ -26,48 +26,38 @@ public class UserController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public Collection<User> findAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User addUser(@Valid @RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public User updateUser(@Valid @RequestBody User user) {
         return userService.updateUser(user);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") @Positive Long id) {
+    public User getUserById(@PathVariable("id") Integer id) {
         return userService.getUserById(id);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
-    public Collection<User> addUserToFriends(
-            @PathVariable @Positive Long id,
-            @PathVariable @Positive Long friendId
-    ) {
-        return userService.addUserToFriends(id, friendId);
+    @GetMapping("/{userId}/friends/common/{otherUserId}")
+    public List<User> getCommonFriends(
+            @PathVariable("userId") Integer userId,
+            @PathVariable("otherUserId") Integer otherUserId) {
+        return userService.getCommonFriends(userId, otherUserId);
     }
 
-    @DeleteMapping("/{userId}/friends/{friendId}")
-    public void removeUserFromFriends(
-            @PathVariable @Positive Long userId,
-            @PathVariable @Positive Long friendId
-    ) {
-        userService.removeUserFromFriends(userId, friendId);
-    }
-
-    @GetMapping("/{id}/friends")
-    public List<User> getAllFriends(@PathVariable @Positive Long id) {
-        return userService.getAllFriends(id);
-    }
-
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable @Positive Long id, @Positive @PathVariable Long otherId) {
-        return userService.getCommonFriends(id, otherId);
+    @GetMapping("/{userId}/friends")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> friendGet(@PathVariable("userId") Integer userId) {
+        return userService.friendGet(userId);
     }
 }
