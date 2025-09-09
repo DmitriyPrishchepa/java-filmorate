@@ -25,15 +25,6 @@ public class UpdateUserTest extends BaseInstructions {
                 LocalDate.of(1995, 10, 10)
         );
 
-
-        User newUser = User.builder()
-                .id(1)
-                .name("Dima")
-                .email("alex@gmail.com")
-                .login("alexandr")
-                .birthday(LocalDate.of(1995, 10, 10))
-                .build();
-
         List<User> allUsers = userService.getAllUsers().stream().toList();
 
         User userFromDb = allUsers.getFirst();

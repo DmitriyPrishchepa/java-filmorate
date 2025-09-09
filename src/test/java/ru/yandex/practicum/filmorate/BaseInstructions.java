@@ -162,6 +162,6 @@ public class BaseInstructions {
                 .birthday(newUser.getBirthday())
                 .build();
 
-        userService.updateUser(user);
+        userService.updateUser(newUser);
     }
 }
