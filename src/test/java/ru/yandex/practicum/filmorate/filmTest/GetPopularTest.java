@@ -1,19 +1,15 @@
 package ru.yandex.practicum.filmorate.filmTest;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Slf4j
 public class GetPopularTest extends BaseInstructions {
 
     @BeforeEach
@@ -24,56 +20,9 @@ public class GetPopularTest extends BaseInstructions {
     @Test
     public void testGetPopularAndLikeFilm() {
 
-        createUserForTest(
-                "Svyatoslav",
-                "svyat@gmail.com",
-                "svyatoy",
-                LocalDate.of(1992, 5, 11)
-        );
+        addSomeUsersBatchUpdate(users);
 
-        createUserForTest(
-                "Oleg",
-                "olli@gmail.com",
-                "olegek",
-                LocalDate.of(1991, 5, 11)
-        );
-
-        createUserForTest(
-                "John",
-                "jonny@gmail.com",
-                "j",
-                LocalDate.of(1991, 10, 15)
-        );
-
-        createFilmForTest(
-                "It",
-                "It will come",
-                LocalDate.of(2017, 9, 5),
-                135,
-                Mpa.builder()
-                        .id(3)
-                        .name("PG-13")
-                        .build());
-
-        createFilmForTest(
-                "Bad boys",
-                "Bad boys, bad boys, what you gonna do...",
-                LocalDate.of(1995, 4, 6),
-                119,
-                Mpa.builder()
-                        .id(3)
-                        .name("PG-13")
-                        .build());
-
-        createFilmForTest(
-                "The Secret Life of Walter Mitty",
-                "The Secret Life of Walter Mitty",
-                LocalDate.of(2013, 10, 5),
-                151,
-                Mpa.builder()
-                        .id(3)
-                        .name("PG-13")
-                        .build());
+        addSomeFilmsBatchUpdate(films);
 
         List<Film> allFilms = filmService.getAllFilms().stream().toList();
         List<User> allUsers = userService.getAllUsers().stream().toList();

@@ -32,7 +32,5 @@ public class UpdateUserTest extends BaseInstructions {
         userFromDb.setName("Dmitriy");
 
         updateUserForTest(userFromDb);
-
-        User newUserFromDb = userService.getAllUsers().stream().toList().getFirst();
     }
 }

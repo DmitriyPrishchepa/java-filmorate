@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.filmTest;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.BaseInstructions;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Slf4j
 public class CreateFilmTest extends BaseInstructions {
 
     @BeforeEach
