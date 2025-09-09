@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -108,5 +109,26 @@ public class BaseInstructions {
         film.getGenres().addAll(genres);
 
         filmService.addFilm(film);
+    }
+
+    protected void updateFilmForTest(Film newFilm) {
+        final String UPDATE_QUERY = "UPDATE films SET " +
+                "name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? WHERE id = ?";
+
+        try {
+            jdbcTemplate.update(
+                    UPDATE_QUERY,
+                    newFilm.getName(),
+                    newFilm.getDescription(),
+                    newFilm.getReleaseDate(),
+                    newFilm.getDuration(),
+                    newFilm.getMpa().getId()
+            );
+
+        } catch (
+                RuntimeException e) {
+            e.getStackTrace();
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
     }
 }
