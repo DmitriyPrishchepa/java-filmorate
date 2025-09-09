@@ -79,7 +79,7 @@ public class BaseInstructions {
     );
 
 
-    protected Film createFilmForTest(
+    protected void createFilmForTest(
             String name,
             String description,
             LocalDate releaseDate,
@@ -107,8 +107,6 @@ public class BaseInstructions {
 
         film.getGenres().addAll(genres);
 
-        return filmService.addFilm(film);
+        filmService.addFilm(film);
     }
-
-
 }

@@ -26,7 +26,7 @@ public class GetAllFilmsTest extends BaseInstructions {
                         .name("PG-13")
                         .build());
 
-        Film testFilm = createFilmForTest(
+        createFilmForTest(
                 "Bad boys",
                 "Bad boys, bad boys, what you gonna do...",
                 LocalDate.of(1995, 4, 6),
